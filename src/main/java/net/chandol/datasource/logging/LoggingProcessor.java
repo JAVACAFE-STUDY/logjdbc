@@ -4,6 +4,8 @@ import net.chandol.datasource.LoggableDataSourceConfig;
 import net.chandol.datasource.sql.parameter.Parameter;
 import net.chandol.datasource.sql.parameter.ParameterCollector;
 import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
  * 어서 작업 끝내고 로깅을 넣읍시다!
  */
 public class LoggingProcessor {
+    private static final Logger logger = LoggerFactory.getLogger("net.chandol.sql");
+
     public static void logSql(LoggableDataSourceConfig config, String templateSql, ParameterCollector parameterCollector) {
 
         ParameterConverter converter = config.getConverter();
@@ -18,7 +22,9 @@ public class LoggingProcessor {
         List<String> convertedParams = converter.convert(params);
 
         // Parameter
-        System.out.println(parameterToLog(params, convertedParams));
+        if (logger.isDebugEnabled()) {
+            logger.debug(parameterToLog(params, convertedParams));
+        }
 
         // SQL
         String sql = bind(templateSql, convertedParams);
@@ -26,14 +32,19 @@ public class LoggingProcessor {
         //SQL Formatting
         String formattedSql = config.getFormatter().format(sql);
 
-        System.out.println(formattedSql);
+        if (logger.isDebugEnabled()) {
+            logger.debug(formattedSql);
+        }
+
     }
 
     public static void logSql(LoggableDataSourceConfig config, String sql) {
         //SQL Formatting
         String formattedSql = config.getFormatter().format(sql);
 
-        System.out.println(formattedSql);
+        if (logger.isDebugEnabled()) {
+            logger.debug(formattedSql);
+        }
     }
 
     // 파라미터가 모호함... 리팩토링 필요!!
