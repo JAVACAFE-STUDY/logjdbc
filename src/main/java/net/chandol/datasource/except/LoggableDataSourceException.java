@@ -1,6 +1,8 @@
 package net.chandol.datasource.except;
 
-
+/**
+ * 에러 통합처리
+ */
 public class LoggableDataSourceException extends RuntimeException{
 
     public LoggableDataSourceException(String message) {

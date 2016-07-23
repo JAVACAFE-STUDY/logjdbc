@@ -3,6 +3,7 @@ package net.chandol.datasource.sql.parameter.converter.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// 파라미터 변환시 사용되는 함수 모음.
 public final class ConverterUtil {
     public static String dateFormat(Date date, String pattern) {
         return new SimpleDateFormat(pattern).format(date);

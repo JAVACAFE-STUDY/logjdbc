@@ -10,6 +10,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * 지원하는 데이터베이스 타입
+ */
 public enum DatabaseType {
     MYSQL(MysqlParameterConverter.class),
     H2(CommonParameterConverter.class),

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * 아파치 재단의 SQLFormatter를 가져옴.
+ * 아파치 재단의 SQLFormatter를 가져와 살짝 수정해놓음.
  *
  * <p>
  * Converts single-line SQL strings into nicely-formatted

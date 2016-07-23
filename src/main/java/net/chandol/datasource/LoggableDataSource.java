@@ -11,6 +11,10 @@ import java.util.logging.Logger;
 
 import static net.chandol.datasource.LoggableDataSourceConfig.autoconfig;
 
+/**
+ * 기존의 Datasource를 감싸주는 프록시로써의 역할을 합니다.
+ * 해당 프록시는 SQL문, parameter를 캐치하여 로그를 만들어줍니다.
+ */
 public class LoggableDataSource implements DataSource {
     private DataSource _datasource;
     private LoggableDataSourceConfig config;

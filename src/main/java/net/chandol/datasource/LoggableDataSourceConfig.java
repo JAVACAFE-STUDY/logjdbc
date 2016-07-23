@@ -6,6 +6,16 @@ import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
 
 import javax.sql.DataSource;
 
+/**
+ * SQL로그 설정.
+ * TODO 필요한 설정 더 생각해보기
+ * <br>
+ *
+ * <ul>
+ *     <li>포메팅 설정</li>
+ *     <li>ResultSet 출력설정</li>
+ * </ul>
+ */
 public class LoggableDataSourceConfig {
     private DatabaseType type;
     private ParameterConverter converter;

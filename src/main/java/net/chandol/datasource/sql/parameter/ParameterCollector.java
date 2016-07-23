@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 파라미터 모으고 결과를 반환.
+ */
 public class ParameterCollector {
     private List<Parameter> parameters = new LinkedList<>();
 

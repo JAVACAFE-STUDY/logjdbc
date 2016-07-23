@@ -5,6 +5,9 @@ import net.chandol.datasource.sql.parameter.Parameter;
 
 import java.util.List;
 
+/**
+ * 작업필요 컨버터
+ */
 public class NeedImplementParameterConverter implements ParameterConverter{
     @Override
     public String convert(Parameter parameter) {

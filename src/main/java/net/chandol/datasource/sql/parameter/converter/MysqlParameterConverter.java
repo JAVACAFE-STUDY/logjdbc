@@ -10,6 +10,9 @@ import static net.chandol.datasource.sql.parameter.converter.util.ConverterUtil.
 import static net.chandol.datasource.sql.parameter.converter.util.ConverterUtil.strParam;
 import static net.chandol.datasource.sql.parameter.type.ParameterType.*;
 
+/**
+ * Mysql 벤더용 파라미터 변환
+ */
 public class MysqlParameterConverter extends CommonParameterConverter {
     @Override
     public String convert(Parameter parameter) {

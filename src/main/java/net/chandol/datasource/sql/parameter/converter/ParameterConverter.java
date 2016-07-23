@@ -4,7 +4,6 @@ import net.chandol.datasource.sql.parameter.Parameter;
 
 import java.util.List;
 
-
 public interface ParameterConverter {
     String convert(Parameter parameter);
 

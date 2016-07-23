@@ -11,6 +11,10 @@ import java.util.List;
 import static net.chandol.datasource.sql.parameter.converter.util.ConverterUtil.*;
 import static net.chandol.datasource.sql.parameter.type.ParameterType.*;
 
+/**
+ * 일반적으로 사용되는 파라미터 변환기
+ * 각 SQL 벤더별로 다른 변환방식  은 ㅇ하위클래스로 위임한다.
+ */
 public class CommonParameterConverter implements ParameterConverter {
 
     @Override
