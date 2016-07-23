@@ -1,4 +1,4 @@
-package net.chandol.datasource;
+package net.chandol.datasource.testhelper;
 
 import org.h2.jdbcx.JdbcDataSource;
 

@@ -6,7 +6,7 @@ import org.junit.Test;
 import javax.sql.DataSource;
 import java.sql.*;
 
-import static net.chandol.datasource.DummyDataSource.getDummyH2DataSource;
+import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
 
 public class LoggableDataSourceTest {
     @Test

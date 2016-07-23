@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static net.chandol.datasource.DatabaseType.H2;
 import static net.chandol.datasource.DatabaseType.MYSQL;
-import static net.chandol.datasource.DummyDataSource.getDummyH2DataSource;
+import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DatabaseTypeTest {
