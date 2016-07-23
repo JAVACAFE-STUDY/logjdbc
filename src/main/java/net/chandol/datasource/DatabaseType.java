@@ -35,6 +35,7 @@ public enum DatabaseType {
         }
     }
 
+    // FIXME 데이터베이스명에 따라서 벤더를 선택할 수 있도록 만들 것.
     public static DatabaseType find(DataSource datasource) {
         String databaseName = getDatabaseName(datasource);
 
