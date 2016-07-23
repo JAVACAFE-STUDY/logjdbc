@@ -13,7 +13,7 @@ import static net.chandol.datasource.sql.parameter.type.ParameterType.*;
 /**
  * Mysql 벤더용 파라미터 변환
  */
-public class MysqlParameterConverter extends CommonParameterConverter {
+public class MysqlParameterConverter extends BaseParameterConverter {
     @Override
     public String convert(Parameter parameter) {
         ParameterType type = parameter.getType();

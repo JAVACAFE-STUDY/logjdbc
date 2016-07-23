@@ -24,7 +24,7 @@ public class LoggableDataSourceConfig {
     // 각 항목들을 초기화시킵니다.
     public LoggableDataSourceConfig(DatabaseType type, SqlFormatter formatter) {
         this.type = type;
-        this.converter = type.getParameterConverterInstance();
+        this.converter = type.getParameterConverter();
         this.formatter = formatter;
     }
 
