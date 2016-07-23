@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * 어서 작업 끝내고 로깅을 넣읍시다!
- */
 public class LoggingProcessor {
     private static final Logger logger = LoggerFactory.getLogger("net.chandol.sql");
 
