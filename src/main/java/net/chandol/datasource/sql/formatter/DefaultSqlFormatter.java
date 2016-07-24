@@ -45,7 +45,7 @@ public class DefaultSqlFormatter implements SqlFormatter {
     private boolean multiLine = false;
     private boolean doubleSpace = true;
     private String newline = System.getProperty("line.separator");
-    private int lineLength = 140;
+    private int lineLength = 72;
     private String wrapIndent = "        ";
     private String clauseIndent = "    ";
 
@@ -131,7 +131,7 @@ public class DefaultSqlFormatter implements SqlFormatter {
     @Override
     public String format(String sourceSql) {
         if (!multiLine) {
-            return prettyPrintLine(sourceSql);
+            return newline + prettyPrintLine(sourceSql);
         } else {
             StringBuilder sql = new StringBuilder(sourceSql);
             StringBuilder buf = new StringBuilder(sql.length());
@@ -154,7 +154,7 @@ public class DefaultSqlFormatter implements SqlFormatter {
                     buf.append(newline);
             }
 
-            return buf.toString();
+            return newline + buf.toString();
         }
     }
 

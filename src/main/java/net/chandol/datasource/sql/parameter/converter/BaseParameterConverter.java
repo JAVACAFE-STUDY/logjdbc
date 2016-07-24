@@ -12,7 +12,7 @@ import static net.chandol.datasource.sql.parameter.converter.util.ConverterUtil.
 import static net.chandol.datasource.sql.parameter.type.ParameterType.*;
 
 /**
- * 일반적으로 사용되는 파라미터 변환기
+ * 일반적으로 사용되는 파라미터 변환로직
  * 각 SQL 벤더별로 다른 변환방식은 하위클래스에 위임한다.
  */
 public class BaseParameterConverter implements ParameterConverter {
@@ -24,7 +24,7 @@ public class BaseParameterConverter implements ParameterConverter {
 
         // 작업불가능한 타입은 문자열을 그대로 출력합니다.
         if (!type.isConvertible())
-            return (String) value;
+            return "'" + value + "'";
 
         if (value == null) {
             return "NULL";

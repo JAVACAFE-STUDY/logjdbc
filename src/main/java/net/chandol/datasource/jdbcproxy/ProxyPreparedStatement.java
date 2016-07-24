@@ -21,15 +21,14 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
         super(config, preparedStatement);
         this._pstmt = preparedStatement;
         this.sql = sql;
-        collector = new ParameterCollector(/*TODO 데이터베이스 타입 추가*/);
+        collector = new ParameterCollector();
     }
 
     @Override
     public ResultSet executeQuery() throws SQLException {
         LoggingProcessor.logSql(config, sql, collector);
         ResultSet resultSet = _pstmt.executeQuery();
-
-        return resultSet;
+        return new ProxyResultSet(config, resultSet);
     }
 
     @Override

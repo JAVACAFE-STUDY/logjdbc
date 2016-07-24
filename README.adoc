@@ -47,5 +47,6 @@ public DataSource simpleDataSource() {
 ** 현재는 mySql, h2만 가능
 * [ ] ResultSet을 읽기좋은 형태로 출력할 수 있다.
 * [ ] SQL에 색상을넣어서 가독성을 높인다.
+* [ ] 특정상황에서만 사용가능하도록 설정되도록 만들 것.
 
 

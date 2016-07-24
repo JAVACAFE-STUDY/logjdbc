@@ -4,6 +4,8 @@ import net.chandol.datasource.LoggableDataSourceConfig;
 import net.chandol.datasource.sql.parameter.Parameter;
 import net.chandol.datasource.sql.parameter.ParameterCollector;
 import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
+import net.chandol.datasource.sql.resultset.ResultSetCollector;
+import net.chandol.datasource.sql.resultset.ResultSetData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +28,6 @@ public class LoggingProcessor {
         String formattedSql = config.getFormatter().format(sql);
 
         logger.debug(formattedSql);
-
-        // printing resultset
-
-
-
     }
 
     public static void logSql(LoggableDataSourceConfig config, String sql) {
@@ -39,6 +36,23 @@ public class LoggingProcessor {
 
         if (logger.isDebugEnabled()) {
             logger.debug(formattedSql);
+        }
+    }
+
+    public static void logResultSet(LoggableDataSourceConfig config, ResultSetCollector collector) {
+        ResultSetData data = collector.getResultSetData();
+        List<String> columns = data.getColumns();
+
+        List<String[]> datas = data.getDatas();
+        for (int i = 0; i < datas.size(); i++) {
+            logger.debug("row : {}", i + 1);
+            String[] get = datas.get(i);
+            for (int j = 0; j < get.length; j++) {
+                String column = columns.get(j);
+                String value = get[j];
+
+                logger.debug("column : {}, value : {}", column, value);
+            }
         }
     }
 
