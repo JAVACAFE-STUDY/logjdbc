@@ -19,19 +19,17 @@ public class LoggingProcessor {
         List<String> convertedParams = converter.convert(params);
 
         // Parameter
-        if (logger.isDebugEnabled()) {
-            logger.debug(parameterToLog(params, convertedParams));
-        }
+        logger.debug(parameterToLog(params, convertedParams));
 
-        // SQL
+        // SQL with formatter
         String sql = bind(templateSql, convertedParams);
-
-        //SQL Formatting
         String formattedSql = config.getFormatter().format(sql);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(formattedSql);
-        }
+        logger.debug(formattedSql);
+
+        // printing resultset
+
+
 
     }
 

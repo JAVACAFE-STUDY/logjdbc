@@ -27,7 +27,9 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
     @Override
     public ResultSet executeQuery() throws SQLException {
         LoggingProcessor.logSql(config, sql, collector);
-        return _pstmt.executeQuery();
+        ResultSet resultSet = _pstmt.executeQuery();
+
+        return resultSet;
     }
 
     @Override
