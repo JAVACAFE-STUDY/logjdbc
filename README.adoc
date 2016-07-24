@@ -2,7 +2,10 @@
 
 == Overview
 
-완성된 형태의 SQL를 로깅을 도와주는 라이브러리입니다.
+SQL 로깅 라이브러리. JDBC에서 발생하는 로그를 파라미터와 바인딩하여 보여줍니다
+
+image::https://cloud.githubusercontent.com/assets/3116341/17082354/eeda734c-51b5-11e6-88e7-fddb849505d9.png
+
 
 == 상세
 
@@ -18,7 +21,7 @@ Java에서 로그로 발생되는 SQL문은 파라미터와 분리된채로 나�
 
 == 사용법
 
-`LoggableDataSource` 해당 클래스로 기존 `DataSource`객체를 추가하면 됩니다.
+`LoggableDataSource`생성자로 기존 `DataSource`객체를 추가하여 로깅을 설정할 수 있습니다.
 
 [source, java]
 ----
