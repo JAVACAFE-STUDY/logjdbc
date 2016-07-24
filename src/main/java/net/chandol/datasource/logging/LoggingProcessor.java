@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * 어서 작업 끝내고 로깅을 넣읍시다!
- */
 public class LoggingProcessor {
     private static final Logger logger = LoggerFactory.getLogger("net.chandol.sql");
 
@@ -22,19 +19,17 @@ public class LoggingProcessor {
         List<String> convertedParams = converter.convert(params);
 
         // Parameter
-        if (logger.isDebugEnabled()) {
-            logger.debug(parameterToLog(params, convertedParams));
-        }
+        logger.debug(parameterToLog(params, convertedParams));
 
-        // SQL
+        // SQL with formatter
         String sql = bind(templateSql, convertedParams);
-
-        //SQL Formatting
         String formattedSql = config.getFormatter().format(sql);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(formattedSql);
-        }
+        logger.debug(formattedSql);
+
+        // printing resultset
+
+
 
     }
 

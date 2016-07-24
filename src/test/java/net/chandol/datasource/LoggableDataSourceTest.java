@@ -1,16 +1,17 @@
 package net.chandol.datasource;
 
 
-import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.sql.*;
 
+import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
+
 public class LoggableDataSourceTest {
     @Test
     public void core() throws SQLException {
-        DataSource h2DataSource = getH2DataSource();
+        DataSource h2DataSource = getDummyH2DataSource();
         DataSource dataSource = new LoggableDataSource(h2DataSource);
 
         Connection connection = dataSource.getConnection();
@@ -35,11 +36,4 @@ public class LoggableDataSourceTest {
         }
     }
 
-    private DataSource getH2DataSource() {
-        JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setURL("jdbc:h2:mem:test");
-        dataSource.setUser("sa");
-        dataSource.setPassword("sa");
-        return dataSource;
-    }
 }
