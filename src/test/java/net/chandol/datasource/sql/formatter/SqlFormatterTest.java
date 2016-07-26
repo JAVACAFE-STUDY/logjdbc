@@ -16,7 +16,7 @@ public class SqlFormatterTest {
         //then
         Assertions.assertThat(resultSql)
                 .asString()
-                .hasLineCount(4);
+                .hasLineCount(8);
     }
 
 }
