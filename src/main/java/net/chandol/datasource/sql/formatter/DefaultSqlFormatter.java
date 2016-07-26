@@ -1,262 +1,473 @@
-package net.chandol.datasource.sql.formatter;/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.    
+/*
+ * License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+ * See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
  */
+package net.chandol.datasource.sql.formatter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
- * 아파치 재단의 SQLFormatter를 가져와 살짝 수정해놓음.
- *
+ * Hibernate의 기본 포메터를 가져와 수정하였음
  * <p>
- * Converts single-line SQL strings into nicely-formatted
- * multi-line, indented statements.
- * Example: from PERSON t0, COMPANY t1 WHERE t0.ID = 10 AND \
- * t0.COMPANY_ID = t1.ID AND t1.NAME = 'OpenJPA'</code> becomes
- * <code>SELECT * FROM PERSON t0, COMPANY t1
- * WHERE t0.ID = 10 AND t0.COMPANY_ID = t1.ID AND t1.NAME = 'OpenJPA'\
- * </code> and
- * <code>INSERT INTO PERSON VALUES('Patrick', 'Linskey', 'OpenJPA', \
- * '202 595 2064 x1111')</code> becomes
- * <code>INSERT INTO PERSON VALUES('Patrick', 'Linskey', 'OpenJPA', '202
- * 595 2064 x1111')</code> etc.
+ * Performs formatting of basic SQL statements (DML + query).
  *
- * @author Patrick Linskey
+ * @author Gavin King
+ * @author Steve Ebersole
  */
 public class DefaultSqlFormatter implements SqlFormatter {
+    public static final String WHITESPACE = " \n\r\f\t";
 
-    private boolean multiLine = false;
-    private boolean doubleSpace = true;
-    private String newline = System.getProperty("line.separator");
-    private int lineLength = 72;
-    private String wrapIndent = "        ";
-    private String clauseIndent = "    ";
+    private static final Set<String> BEGIN_CLAUSES = new HashSet<String>();
+    private static final Set<String> END_CLAUSES = new HashSet<String>();
+    private static final Set<String> LOGICAL = new HashSet<String>();
+    private static final Set<String> QUANTIFIERS = new HashSet<String>();
+    private static final Set<String> DML = new HashSet<String>();
+    private static final Set<String> MISC = new HashSet<String>();
 
-    private static final String[] selectSeparators = new String[]{
-            "FROM ", "WHERE ", "ORDER BY ", // ### is this order correct?
-            "GROUP BY ", "HAVING ",};
+    static {
+        BEGIN_CLAUSES.add("left");
+        BEGIN_CLAUSES.add("right");
+        BEGIN_CLAUSES.add("inner");
+        BEGIN_CLAUSES.add("outer");
+        BEGIN_CLAUSES.add("group");
+        BEGIN_CLAUSES.add("order");
 
-    private static final String[] insertSeparators = new String[]{
-            "VALUES ",};
+        END_CLAUSES.add("where");
+        END_CLAUSES.add("set");
+        END_CLAUSES.add("having");
+        END_CLAUSES.add("join");
+        END_CLAUSES.add("from");
+        END_CLAUSES.add("by");
+        END_CLAUSES.add("join");
+        END_CLAUSES.add("into");
+        END_CLAUSES.add("union");
 
-    private static final String[] updateSeparators = new String[]{
-            "SET ", "WHERE ",};
+        LOGICAL.add("and");
+        LOGICAL.add("or");
+        LOGICAL.add("when");
+        LOGICAL.add("else");
+        LOGICAL.add("end");
 
-    private static final String[] deleteSeparators = new String[]{
-            "WHERE ",};
+        QUANTIFIERS.add("in");
+        QUANTIFIERS.add("all");
+        QUANTIFIERS.add("exists");
+        QUANTIFIERS.add("some");
+        QUANTIFIERS.add("any");
 
-    private static final String[] createTableSeparators = new String[]{
-            "( ",};
+        DML.add("insert");
+        DML.add("update");
+        DML.add("delete");
 
-    private static final String[] createIndexSeparators = new String[]{
-            "ON ", "( ",};
-
-    public void setNewline(String val) {
-        newline = val;
+        MISC.add("select");
+        MISC.add("on");
     }
 
-    public String getNewline() {
-        return newline;
-    }
+    private static final String INDENT_STRING = "    ";
+    private static final String INITIAL = "\n    ";
 
-    public void setLineLength(int val) {
-        lineLength = val;
-    }
-
-    public int getLineLength() {
-        return lineLength;
-    }
-
-    public void setWrapIndent(String val) {
-        wrapIndent = val;
-    }
-
-    public String getWrapIndent() {
-        return wrapIndent;
-    }
-
-    public void setClauseIndent(String val) {
-        clauseIndent = val;
-    }
-
-    public String getClauseIndent() {
-        return clauseIndent;
-    }
-
-    /**
-     * If true, then try to parse multi-line SQL statements.
-     */
-    public void setMultiLine(boolean multiLine) {
-        this.multiLine = multiLine;
-    }
-
-    /**
-     * If true, then try to parse multi-line SQL statements.
-     */
-    public boolean getMultiLine() {
-        return this.multiLine;
-    }
-
-    /**
-     * If true, then output two lines after multi-line statements.
-     */
-    public void setDoubleSpace(boolean doubleSpace) {
-        this.doubleSpace = doubleSpace;
-    }
-
-    /**
-     * If true, then output two lines after multi-line statements.
-     */
-    public boolean getDoubleSpace() {
-        return this.doubleSpace;
-    }
 
     @Override
-    public String format(String sourceSql) {
-        if (!multiLine) {
-            return newline + prettyPrintLine(sourceSql);
-        } else {
-            StringBuilder sql = new StringBuilder(sourceSql);
-            StringBuilder buf = new StringBuilder(sql.length());
-
-            while (sql.length() > 0) {
-                String line = null;
-
-                int index = Math.max(sql.toString().indexOf(";\n"),
-                        sql.toString().indexOf(";\r"));
-                if (index == -1)
-                    line = sql.toString();
-                else
-                    line = sql.substring(0, index + 2);
-
-                // remove the current line from the sql buffer
-                sql.delete(0, line.length());
-
-                buf.append(prettyPrintLine(line));
-                for (int i = 0; i < 1 + (getDoubleSpace() ? 1 : 0); i++)
-                    buf.append(newline);
-            }
-
-            return newline + buf.toString();
-        }
-    }
-
-    private String prettyPrintLine(String sourceSql) {
-        String sql = sourceSql.trim();
-        String lowerCaseSql = sql.toLowerCase();
-
-        String[] separators;
-        if (lowerCaseSql.startsWith("select"))
-            separators = selectSeparators;
-        else if (lowerCaseSql.startsWith("insert"))
-            separators = insertSeparators;
-        else if (lowerCaseSql.startsWith("update"))
-            separators = updateSeparators;
-        else if (lowerCaseSql.startsWith("delete"))
-            separators = deleteSeparators;
-        else if (lowerCaseSql.startsWith("create table"))
-            separators = createTableSeparators;
-        else if (lowerCaseSql.startsWith("create index"))
-            separators = createIndexSeparators;
+    public String format(String source) {
+        if (isDDL(source))
+            return DDLFormatter.INSTANCE.format(source);
         else
-            separators = new String[0];
-
-        int start = 0;
-        int end = -1;
-        StringBuilder clause;
-        List<StringBuilder> clauses = new ArrayList<>();
-        clauses.add(new StringBuilder());
-        for (String separator : separators) {
-            end = lowerCaseSql.indexOf(" " + separator.toLowerCase(),
-                    start);
-            if (end == -1)
-                break;
-
-            clause = clauses.get(clauses.size() - 1);
-            clause.append(sql.substring(start, end));
-
-            clause = new StringBuilder();
-            clauses.add(clause);
-            clause.append(clauseIndent);
-            clause.append(separator);
-
-            start = end + 1 + separator.length();
-        }
-
-        clause = clauses.get(clauses.size() - 1);
-        clause.append(sql.substring(start));
-
-        StringBuilder pp = new StringBuilder(sql.length());
-        for (Iterator<StringBuilder> iter = clauses.iterator(); iter.hasNext(); ) {
-            pp.append(wrapLine(iter.next().toString()));
-            if (iter.hasNext())
-                pp.append(newline);
-        }
-
-        return pp.toString();
+            return new FormatProcess(source).perform();
     }
 
-    private String wrapLine(String line) {
-        StringBuilder lines = new StringBuilder(line.length());
+    private static class FormatProcess {
+        boolean beginLine = true;
+        boolean afterBeginBeforeEnd;
+        boolean afterByOrSetOrFromOrSelect;
+        boolean afterValues;
+        boolean afterOn;
+        boolean afterBetween;
+        boolean afterInsert;
+        int inFunction;
+        int parensSinceSelect;
+        private LinkedList<Integer> parenCounts = new LinkedList<Integer>();
+        private LinkedList<Boolean> afterByOrFromOrSelects = new LinkedList<Boolean>();
 
-        // ensure that any leading whitespace is preserved.
-        for (int i = 0; i < line.length() &&
-                (line.charAt(i) == ' ' || line.charAt(i) == '\t'); i++) {
-            lines.append(line.charAt(i));
+        int indent = 1;
+
+        StringBuilder result = new StringBuilder();
+        StringTokenizer tokens;
+        String lastToken;
+        String token;
+        String lcToken;
+
+        public FormatProcess(String sql) {
+            tokens = new StringTokenizer(
+                    sql,
+                    "()+*/-=<>'`\"[]," + WHITESPACE,
+                    true
+            );
         }
 
-        StringTokenizer tok = new StringTokenizer(line);
-        int length = 0;
-        String elem;
-        while (tok.hasMoreTokens()) {
-            elem = tok.nextToken();
-            length += elem.length();
+        public String perform() {
 
-            // if we would have exceeded the max, write out a newline
-            // before writing the elem.
-            if (length >= lineLength) {
-                lines.append(newline);
-                lines.append(wrapIndent);
-                lines.append(elem);
-                lines.append(' ');
-                length = wrapIndent.length() + elem.length() + 1;
-                continue;
+            result.append(INITIAL);
+
+            while (tokens.hasMoreTokens()) {
+                token = tokens.nextToken();
+                lcToken = token.toLowerCase(Locale.ROOT);
+
+                if ("'".equals(token)) {
+                    String t;
+                    do {
+                        t = tokens.nextToken();
+                        token += t;
+                    }
+                    // cannot handle single quotes
+                    while (!"'".equals(t) && tokens.hasMoreTokens());
+                } else if ("\"".equals(token)) {
+                    String t;
+                    do {
+                        t = tokens.nextToken();
+                        token += t;
+                    }
+                    while (!"\"".equals(t));
+                }
+
+                if (afterByOrSetOrFromOrSelect && ",".equals(token)) {
+                    commaAfterByOrFromOrSelect();
+                } else if (afterOn && ",".equals(token)) {
+                    commaAfterOn();
+                } else if ("(".equals(token)) {
+                    openParen();
+                } else if (")".equals(token)) {
+                    closeParen();
+                } else if (BEGIN_CLAUSES.contains(lcToken)) {
+                    beginNewClause();
+                } else if (END_CLAUSES.contains(lcToken)) {
+                    endNewClause();
+                } else if ("select".equals(lcToken)) {
+                    select();
+                } else if (DML.contains(lcToken)) {
+                    updateOrInsertOrDelete();
+                } else if ("values".equals(lcToken)) {
+                    values();
+                } else if ("on".equals(lcToken)) {
+                    on();
+                } else if (afterBetween && lcToken.equals("and")) {
+                    misc();
+                    afterBetween = false;
+                } else if (LOGICAL.contains(lcToken)) {
+                    logical();
+                } else if (isWhitespace(token)) {
+                    white();
+                } else {
+                    misc();
+                }
+
+                if (!isWhitespace(token)) {
+                    lastToken = lcToken;
+                }
+
             }
-
-            // if the current length is greater than the max, then the
-            // last word alone was too long, so just write out a
-            // newline and move on.
-            if (elem.length() >= lineLength) {
-                lines.append(elem);
-                if (tok.hasMoreTokens())
-                    lines.append(newline);
-                lines.append(wrapIndent);
-                length = wrapIndent.length();
-                continue;
-            }
-
-            lines.append(elem);
-            lines.append(' ');
-            length++;
+            return result.toString();
         }
 
-        return lines.toString();
+        private void commaAfterOn() {
+            out();
+            indent--;
+            newline();
+            afterOn = false;
+            afterByOrSetOrFromOrSelect = true;
+        }
+
+        private void commaAfterByOrFromOrSelect() {
+            out();
+            newline();
+        }
+
+        private void logical() {
+            if ("end".equals(lcToken)) {
+                indent--;
+            }
+            newline();
+            out();
+            beginLine = false;
+        }
+
+        private void on() {
+            indent++;
+            afterOn = true;
+            newline();
+            out();
+            beginLine = false;
+        }
+
+        private void misc() {
+            out();
+            if ("between".equals(lcToken)) {
+                afterBetween = true;
+            }
+            if (afterInsert) {
+                newline();
+                afterInsert = false;
+            } else {
+                beginLine = false;
+                if ("case".equals(lcToken)) {
+                    indent++;
+                }
+            }
+        }
+
+        private void white() {
+            if (!beginLine) {
+                result.append(" ");
+            }
+        }
+
+        private void updateOrInsertOrDelete() {
+            out();
+            indent++;
+            beginLine = false;
+            if ("update".equals(lcToken)) {
+                newline();
+            }
+            if ("insert".equals(lcToken)) {
+                afterInsert = true;
+            }
+        }
+
+        private void select() {
+            out();
+            indent++;
+            newline();
+            parenCounts.addLast(parensSinceSelect);
+            afterByOrFromOrSelects.addLast(afterByOrSetOrFromOrSelect);
+            parensSinceSelect = 0;
+            afterByOrSetOrFromOrSelect = true;
+        }
+
+        private void out() {
+            result.append(token);
+        }
+
+        private void endNewClause() {
+            if (!afterBeginBeforeEnd) {
+                indent--;
+                if (afterOn) {
+                    indent--;
+                    afterOn = false;
+                }
+                newline();
+            }
+            out();
+            if (!"union".equals(lcToken)) {
+                indent++;
+            }
+            newline();
+            afterBeginBeforeEnd = false;
+            afterByOrSetOrFromOrSelect = "by".equals(lcToken)
+                    || "set".equals(lcToken)
+                    || "from".equals(lcToken);
+        }
+
+        private void beginNewClause() {
+            if (!afterBeginBeforeEnd) {
+                if (afterOn) {
+                    indent--;
+                    afterOn = false;
+                }
+                indent--;
+                newline();
+            }
+            out();
+            beginLine = false;
+            afterBeginBeforeEnd = true;
+        }
+
+        private void values() {
+            indent--;
+            newline();
+            out();
+            indent++;
+            newline();
+            afterValues = true;
+        }
+
+        private void closeParen() {
+            parensSinceSelect--;
+            if (parensSinceSelect < 0) {
+                indent--;
+                parensSinceSelect = parenCounts.removeLast();
+                afterByOrSetOrFromOrSelect = afterByOrFromOrSelects.removeLast();
+            }
+            if (inFunction > 0) {
+                inFunction--;
+                out();
+            } else {
+                if (!afterByOrSetOrFromOrSelect) {
+                    indent--;
+                    newline();
+                }
+                out();
+            }
+            beginLine = false;
+        }
+
+        private void openParen() {
+            if (isFunctionName(lastToken) || inFunction > 0) {
+                inFunction++;
+            }
+            beginLine = false;
+            if (inFunction > 0) {
+                out();
+            } else {
+                out();
+                if (!afterByOrSetOrFromOrSelect) {
+                    indent++;
+                    newline();
+                    beginLine = true;
+                }
+            }
+            parensSinceSelect++;
+        }
+
+        private static boolean isFunctionName(String tok) {
+            final char begin = tok.charAt(0);
+            final boolean isIdentifier = Character.isJavaIdentifierStart(begin) || '"' == begin;
+            return isIdentifier &&
+                    !LOGICAL.contains(tok) &&
+                    !END_CLAUSES.contains(tok) &&
+                    !QUANTIFIERS.contains(tok) &&
+                    !DML.contains(tok) &&
+                    !MISC.contains(tok);
+        }
+
+        private static boolean isWhitespace(String token) {
+            return WHITESPACE.contains(token);
+        }
+
+        private void newline() {
+            result.append("\n");
+            for (int i = 0; i < indent; i++) {
+                result.append(INDENT_STRING);
+            }
+            beginLine = true;
+        }
+    }
+
+    private static class DDLFormatter {
+
+        public static final DDLFormatter INSTANCE = new DDLFormatter();
+
+        public String format(String sql) {
+            if (sql.equals(null) || sql.isEmpty()) {
+                return sql;
+            }
+
+            if (sql.toLowerCase(Locale.ROOT).startsWith("create table")) {
+                return formatCreateTable(sql);
+            } else if (sql.toLowerCase(Locale.ROOT).startsWith("create")) {
+                return sql;
+            } else if (sql.toLowerCase(Locale.ROOT).startsWith("alter table")) {
+                return formatAlterTable(sql);
+            } else if (sql.toLowerCase(Locale.ROOT).startsWith("comment on")) {
+                return formatCommentOn(sql);
+            } else {
+                return "\n    " + sql;
+            }
+        }
+
+        private String formatCommentOn(String sql) {
+            final StringBuilder result = new StringBuilder(60).append("\n    ");
+            final StringTokenizer tokens = new StringTokenizer(sql, " '[]\"", true);
+
+            boolean quoted = false;
+            while (tokens.hasMoreTokens()) {
+                final String token = tokens.nextToken();
+                result.append(token);
+                if (isQuote(token)) {
+                    quoted = !quoted;
+                } else if (!quoted) {
+                    if ("is".equals(token)) {
+                        result.append("\n       ");
+                    }
+                }
+            }
+
+            return result.toString();
+        }
+
+        private String formatAlterTable(String sql) {
+            final StringBuilder result = new StringBuilder(60).append("\n    ");
+            final StringTokenizer tokens = new StringTokenizer(sql, " (,)'[]\"", true);
+
+            boolean quoted = false;
+            while (tokens.hasMoreTokens()) {
+                final String token = tokens.nextToken();
+                if (isQuote(token)) {
+                    quoted = !quoted;
+                } else if (!quoted) {
+                    if (isBreak(token)) {
+                        result.append("\n        ");
+                    }
+                }
+                result.append(token);
+            }
+
+            return result.toString();
+        }
+
+        private String formatCreateTable(String sql) {
+            final StringBuilder result = new StringBuilder(60).append("\n    ");
+            final StringTokenizer tokens = new StringTokenizer(sql, "(,)'[]\"", true);
+
+            int depth = 0;
+            boolean quoted = false;
+            while (tokens.hasMoreTokens()) {
+                final String token = tokens.nextToken();
+                if (isQuote(token)) {
+                    quoted = !quoted;
+                    result.append(token);
+                } else if (quoted) {
+                    result.append(token);
+                } else {
+                    if (")".equals(token)) {
+                        depth--;
+                        if (depth == 0) {
+                            result.append("\n    ");
+                        }
+                    }
+                    result.append(token);
+                    if (",".equals(token) && depth == 1) {
+                        result.append("\n       ");
+                    }
+                    if ("(".equals(token)) {
+                        depth++;
+                        if (depth == 1) {
+                            result.append("\n        ");
+                        }
+                    }
+                }
+            }
+
+            return result.toString();
+        }
+
+        private static boolean isBreak(String token) {
+            return "drop".equals(token) ||
+                    "add".equals(token) ||
+                    "references".equals(token) ||
+                    "foreign".equals(token) ||
+                    "on".equals(token);
+        }
+
+        private static boolean isQuote(String tok) {
+            return "\"".equals(tok) ||
+                    "`".equals(tok) ||
+                    "]".equals(tok) ||
+                    "[".equals(tok) ||
+                    "'".equals(tok);
+        }
+
+    }
+
+    private boolean isDDL(String source) {
+        String s = source.trim().toLowerCase();
+        return s.startsWith("create") || s.startsWith("alter table") || s.startsWith("comment on");
     }
 }

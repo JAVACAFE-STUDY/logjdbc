@@ -48,15 +48,18 @@ public class LoggingProcessor {
         List<String[]> rowValues = resultSetData.getDatas();
 
         V2_AsciiTable table = new V2_AsciiTable();
-        table.addRow(columns.toArray());
+
         table.addRule();
+        table.addRow(columns.toArray());
+        table.addStrongRule();
 
-        for (String[] values : rowValues) {
+        for (String[] values : rowValues)
             table.addRow(values);
-        }
 
+        table.addRule();
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
-        rend.setTheme(V2_E_TableThemes.UTF_HEAVY.get());
+
+        rend.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
         rend.setWidth(new WidthLongestLine());
 
         logger.debug("\n" + rend.render(table).toString());
