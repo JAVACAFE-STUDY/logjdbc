@@ -1,6 +1,6 @@
 package net.chandol.datasource.jdbcproxy;
 
-import net.chandol.datasource.LoggableDataSourceConfig;
+import net.chandol.datasource.config.LoggableDataSourceConfig;
 import net.chandol.datasource.logging.LoggingProcessor;
 import net.chandol.datasource.sql.parameter.ParameterCollector;
 

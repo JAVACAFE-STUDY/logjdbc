@@ -1,12 +1,12 @@
-package net.chandol.datasource;
+package net.chandol.datasource.config;
 
 import net.chandol.datasource.sql.parameter.converter.BaseParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.MysqlParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
 import org.junit.Test;
 
-import static net.chandol.datasource.DatabaseType.H2;
-import static net.chandol.datasource.DatabaseType.MYSQL;
+import static net.chandol.datasource.config.DatabaseType.H2;
+import static net.chandol.datasource.config.DatabaseType.MYSQL;
 import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,4 +1,4 @@
-package net.chandol.datasource;
+package net.chandol.datasource.config;
 
 import net.chandol.datasource.sql.formatter.DefaultSqlFormatter;
 import net.chandol.datasource.sql.formatter.SqlFormatter;
@@ -45,7 +45,7 @@ public class LoggableDataSourceConfig {
     }
 
 
-    static LoggableDataSourceConfig autoconfig(DataSource datasource) {
+    public static LoggableDataSourceConfig autoconfig(DataSource datasource) {
         DatabaseType type = DatabaseType.find(datasource);
         SqlFormatter formatter = new DefaultSqlFormatter();
 

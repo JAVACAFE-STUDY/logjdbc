@@ -1,6 +1,6 @@
 package net.chandol.datasource.jdbcproxy;
 
-import net.chandol.datasource.LoggableDataSourceConfig;
+import net.chandol.datasource.config.LoggableDataSourceConfig;
 
 import java.sql.*;
 import java.util.Map;

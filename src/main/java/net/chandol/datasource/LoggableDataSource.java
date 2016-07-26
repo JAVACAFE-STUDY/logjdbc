@@ -1,5 +1,6 @@
 package net.chandol.datasource;
 
+import net.chandol.datasource.config.LoggableDataSourceConfig;
 import net.chandol.datasource.jdbcproxy.ProxyConnection;
 
 import javax.sql.DataSource;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-import static net.chandol.datasource.LoggableDataSourceConfig.autoconfig;
+import static net.chandol.datasource.config.LoggableDataSourceConfig.autoconfig;
 
 /**
  * 기존의 Datasource를 감싸주는 프록시로써의 역할을 합니다.
@@ -30,18 +31,16 @@ public class LoggableDataSource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        if (config == null){
+        if (configNotExist())
             config = autoconfig(_datasource);
-        }
 
         return new ProxyConnection(config, this._datasource.getConnection());
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        if (config == null){
+        if (configNotExist())
             config = autoconfig(_datasource);
-        }
 
         return new ProxyConnection(config, this._datasource.getConnection(username, password));
     }
@@ -79,5 +78,9 @@ public class LoggableDataSource implements DataSource {
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return this._datasource.getParentLogger();
+    }
+
+    private boolean configNotExist() {
+        return config == null;
     }
 }
