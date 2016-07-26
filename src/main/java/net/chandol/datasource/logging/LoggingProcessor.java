@@ -1,5 +1,9 @@
 package net.chandol.datasource.logging;
 
+import de.vandermeer.asciitable.v2.V2_AsciiTable;
+import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
+import de.vandermeer.asciitable.v2.render.WidthLongestLine;
+import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import net.chandol.datasource.LoggableDataSourceConfig;
 import net.chandol.datasource.sql.parameter.Parameter;
 import net.chandol.datasource.sql.parameter.ParameterCollector;
@@ -15,7 +19,6 @@ public class LoggingProcessor {
     private static final Logger logger = LoggerFactory.getLogger("net.chandol.sql");
 
     public static void logSql(LoggableDataSourceConfig config, String templateSql, ParameterCollector parameterCollector) {
-
         ParameterConverter converter = config.getConverter();
         List<Parameter> params = parameterCollector.getAll();
         List<String> convertedParams = converter.convert(params);
@@ -40,20 +43,24 @@ public class LoggingProcessor {
     }
 
     public static void logResultSet(LoggableDataSourceConfig config, ResultSetCollector collector) {
-        ResultSetData data = collector.getResultSetData();
-        List<String> columns = data.getColumns();
+        ResultSetData resultSetData = collector.getResultSetData();
 
-        List<String[]> datas = data.getDatas();
-        for (int i = 0; i < datas.size(); i++) {
-            logger.debug("row : {}", i + 1);
-            String[] get = datas.get(i);
-            for (int j = 0; j < get.length; j++) {
-                String column = columns.get(j);
-                String value = get[j];
+        List<String> columns = resultSetData.getColumns();
+        List<String[]> rowValues = resultSetData.getDatas();
 
-                logger.debug("column : {}, value : {}", column, value);
-            }
+        V2_AsciiTable table = new V2_AsciiTable();
+        table.addRow(columns.toArray());
+        table.addRule();
+
+        for (String[] values : rowValues) {
+            table.addRow(values);
         }
+
+        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+        rend.setTheme(V2_E_TableThemes.UTF_HEAVY.get());
+        rend.setWidth(new WidthLongestLine());
+
+        logger.debug("\n" + rend.render(table).toString());
     }
 
     // 파라미터가 모호함... 리팩토링 필요!!
@@ -73,7 +80,6 @@ public class LoggingProcessor {
 
         return builder.toString();
     }
-
 
     private static String bind(String templateSql, List<String> params) {
         // TODO 성능 개선필요
