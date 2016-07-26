@@ -3,11 +3,16 @@ package net.chandol.datasource.config;
 import net.chandol.datasource.sql.parameter.converter.BaseParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.MysqlParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
+import net.chandol.datasource.testhelper.DummyDataSource;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import static net.chandol.datasource.config.DatabaseType.H2;
-import static net.chandol.datasource.config.DatabaseType.MYSQL;
-import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+
+import static net.chandol.datasource.config.DatabaseType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DatabaseTypeTest {
@@ -17,32 +22,63 @@ public class DatabaseTypeTest {
         //given
 
         //when
-        ParameterConverter h2Converter1 = H2.getParameterConverter();
-        ParameterConverter h2Converter2 = H2.getParameterConverter();
+        ParameterConverter h2Converter = H2.getParameterConverter();
         ParameterConverter mySqlConverter = MYSQL.getParameterConverter();
 
         //then
-        assertThat(h2Converter1)
-                .isInstanceOf(BaseParameterConverter.class);
+        assertThat(h2Converter).isInstanceOf(BaseParameterConverter.class);
+        assertThat(mySqlConverter).isInstanceOf(MysqlParameterConverter.class);
+    }
 
-        assertThat(mySqlConverter)
-                .isInstanceOf(MysqlParameterConverter.class);
+    @Test
+    public void 컨버터는_싱글톤으로_등록된다() {
+        //given
+        ParameterConverter h2Converter1 = H2.getParameterConverter();
+        ParameterConverter h2Converter2 = H2.getParameterConverter();
 
-        // then : converter는 싱글톤을 반환한다.
-        // 두개의 참조값은 동일하여야 한다.
+        //then
         assertThat(h2Converter1).isSameAs(h2Converter2);
     }
 
-    // TODO 다른 데이터베이스 타입도 정상적으로 찾아지는지 확인필요
-    // Mock을 설정하는 건 창화씨에게 물어볼 것.
     @Test
-    public void findDatabaseTest() throws Exception {
+    public void 데이터베이스_타입_찾기1() throws Exception {
         //given
+        DataSource H2DataSource = DummyDataSource.getDummyH2DataSource();
 
         //when
-        DatabaseType type = DatabaseType.find(getDummyH2DataSource());
+        DatabaseType h2Type = DatabaseType.find(H2DataSource);
 
         //then
-        assertThat(type).isSameAs(H2);
+        assertThat(h2Type).isSameAs(H2);
+    }
+
+    @Test
+    public void 데이터베이스_타입_찾기2() throws Exception {
+        //given
+        DataSource H2DataSource = getMockDatasourceWithDatabaseName("H2");
+        DataSource OracleDataSource = getMockDatasourceWithDatabaseName("Oracle");
+        DataSource UnknownDataSource = getMockDatasourceWithDatabaseName("Tibero");
+
+        //when
+        DatabaseType h2Type = DatabaseType.find(H2DataSource);
+        DatabaseType oracleType = DatabaseType.find(OracleDataSource);
+        DatabaseType tiberoType = DatabaseType.find(UnknownDataSource);
+
+        //then
+        assertThat(h2Type).isSameAs(H2);
+        assertThat(oracleType).isSameAs(ORACLE);
+        assertThat(tiberoType).isSameAs(UNKNOWN);
+    }
+
+    private DataSource getMockDatasourceWithDatabaseName(String name) throws SQLException {
+        DataSource mockDataSource = Mockito.mock(DataSource.class);
+        Connection mockConnection = Mockito.mock(Connection.class);
+        DatabaseMetaData mockMetaData = Mockito.mock(DatabaseMetaData.class);
+
+        Mockito.when(mockDataSource.getConnection()).thenReturn(mockConnection);
+        Mockito.when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        Mockito.when(mockMetaData.getDatabaseProductName()).thenReturn(name);
+
+        return mockDataSource;
     }
 }
