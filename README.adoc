@@ -4,7 +4,7 @@
 
 SQL 로깅 라이브러리. JDBC에서 발생하는 로그를 파라미터와 바인딩하여 보여줍니다
 
-image::https://cloud.githubusercontent.com/assets/3116341/17082354/eeda734c-51b5-11e6-88e7-fddb849505d9.png[]
+image::https://cloud.githubusercontent.com/assets/3116341/17138215/196a15f2-537a-11e6-8d93-1ee43498c23d.png[]
 
 
 == 상세
