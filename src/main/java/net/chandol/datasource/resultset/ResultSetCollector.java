@@ -1,4 +1,4 @@
-package net.chandol.datasource.sql.resultset;
+package net.chandol.datasource.resultset;
 
 import net.chandol.datasource.except.LoggableDataSourceException;
 
@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import static net.chandol.datasource.sql.resultset.ResultSetUtil.getColumnCount;
+import static net.chandol.datasource.resultset.ResultSetUtil.getColumnCount;
 
 public class ResultSetCollector {
     private ResultSetData datas;

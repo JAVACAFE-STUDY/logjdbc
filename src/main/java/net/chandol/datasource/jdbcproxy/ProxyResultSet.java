@@ -3,7 +3,7 @@ package net.chandol.datasource.jdbcproxy;
 import net.chandol.datasource.config.LoggableDataSourceConfig;
 import net.chandol.datasource.except.LoggableDataSourceException;
 import net.chandol.datasource.logging.LoggingProcessor;
-import net.chandol.datasource.sql.resultset.ResultSetCollector;
+import net.chandol.datasource.resultset.ResultSetCollector;
 
 import java.io.InputStream;
 import java.io.Reader;

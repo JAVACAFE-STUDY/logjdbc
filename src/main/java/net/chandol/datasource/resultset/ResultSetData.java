@@ -1,10 +1,10 @@
-package net.chandol.datasource.sql.resultset;
+package net.chandol.datasource.resultset;
 
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.chandol.datasource.sql.resultset.ResultSetUtil.createColumns;
+import static net.chandol.datasource.resultset.ResultSetUtil.createColumns;
 
 public class ResultSetData {
     private List<Column> columns;

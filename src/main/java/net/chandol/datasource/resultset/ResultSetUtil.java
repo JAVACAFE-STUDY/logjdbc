@@ -1,4 +1,4 @@
-package net.chandol.datasource.sql.resultset;
+package net.chandol.datasource.resultset;
 
 import net.chandol.datasource.except.LoggableDataSourceException;
 

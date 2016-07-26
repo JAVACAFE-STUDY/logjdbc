@@ -1,4 +1,4 @@
-package net.chandol.datasource.sql.resultset;
+package net.chandol.datasource.resultset;
 
 // Collector에서만 사용되는 협력객체. 외부로는 공개하지 않는다.
 // 컬럼정보를 담는 valueObject
