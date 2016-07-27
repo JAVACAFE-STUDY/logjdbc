@@ -37,8 +37,16 @@ public class LoggableDataSourceTest {
         while (resultSet2.next()) {
         }
 
-        resultSet2.close();
+        PreparedStatement pstmt3 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE  NAME=?");
+        pstmt3.setString(1, "Hardik");
+        ResultSet resultSet3 = pstmt3.executeQuery();
+
+        while (resultSet3.next()) {
+        }
+
         resultSet.close();
+        resultSet2.close();
+        resultSet3.close();
     }
 
 }
