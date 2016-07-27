@@ -5,4 +5,5 @@ import net.chandol.datasource.resultset.ResultSetCollector;
 
 public interface ResultSetLogger {
     void logResultSet(LoggableDataSourceConfig config, ResultSetCollector collector);
+    String ResultSetToString(LoggableDataSourceConfig config, ResultSetCollector collector);
 }
