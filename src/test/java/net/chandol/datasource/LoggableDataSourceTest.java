@@ -24,8 +24,9 @@ public class LoggableDataSourceTest {
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (6, 'Komal', 22, 'MP', 4500.00 );");
 
-        PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE ID=?");
+        PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE ID=? AND NAME=?");
         pstmt.setLong(1, 3);
+        pstmt.setString(2, "kaushik");
         ResultSet resultSet = pstmt.executeQuery();
 
         while (resultSet.next()) {
