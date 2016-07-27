@@ -18,7 +18,7 @@ public class DefaultResultSetLogger implements ResultSetLogger {
 
     private V2_AsciiTableRenderer renderer;
 
-    public DefaultResultSetLogger(){
+    public DefaultResultSetLogger() {
         renderer = new V2_AsciiTableRenderer();
 
         renderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
@@ -44,5 +44,26 @@ public class DefaultResultSetLogger implements ResultSetLogger {
         table.addRule();
 
         rsLogger.debug("\n" + renderer.render(table).toString());
+    }
+
+    @Override
+    public String ResultSetToString(LoggableDataSourceConfig config, ResultSetCollector collector) {
+        ResultSetData resultSetData = collector.getResultSetData();
+
+        List<String> columns = resultSetData.getColumns();
+        List<String[]> rowValues = resultSetData.getDatas();
+
+        V2_AsciiTable table = new V2_AsciiTable();
+
+        table.addRule();
+        table.addRow(columns.toArray());
+        table.addStrongRule();
+
+        for (String[] values : rowValues)
+            table.addRow(values);
+
+        table.addRule();
+
+        return "\n" + renderer.render(table).toString();
     }
 }

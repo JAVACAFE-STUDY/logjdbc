@@ -31,6 +31,12 @@ public class ProxyResultSet implements ResultSet {
     }
 
     @Override
+    public String toString(){
+        // toString 을 할때 Override를 하는건 어쩔지...
+        return _resultSet + "\n" + LoggingProcessor.ResultSetToString(config, collector);
+    }
+
+    @Override
     public boolean next() throws SQLException {
         boolean hasNext = _resultSet.next();
 
@@ -45,7 +51,7 @@ public class ProxyResultSet implements ResultSet {
     @Override
     public void close() throws SQLException {
         //끝까지 다 읽었을때에만 호출되게 해놓았음, 더 좋은 방법이 있을 경우 채택하도록 하자!
-        LoggingProcessor.logResultSet(config, collector);
+        //LoggingProcessor.logResultSet(config, collector);
 
         _resultSet.close();
     }

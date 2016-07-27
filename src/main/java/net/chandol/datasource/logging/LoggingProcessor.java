@@ -16,4 +16,8 @@ public class LoggingProcessor {
     public static void logResultSet(LoggableDataSourceConfig config, ResultSetCollector collector) {
         config.getResultSetLogger().logResultSet(config, collector);
     }
+
+    public static String ResultSetToString(LoggableDataSourceConfig config, ResultSetCollector collector) {
+        return config.getResultSetLogger().ResultSetToString(config, collector);
+    }
 }

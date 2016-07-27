@@ -2,6 +2,8 @@ package net.chandol.datasource;
 
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -9,6 +11,8 @@ import java.sql.*;
 import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
 
 public class LoggableDataSourceTest {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
     @Test
     public void core() throws SQLException {
         DataSource h2DataSource = getDummyH2DataSource();
@@ -41,9 +45,10 @@ public class LoggableDataSourceTest {
         PreparedStatement pstmt3 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE  NAME=?");
         pstmt3.setString(1, "Hardik");
         ResultSet resultSet3 = pstmt3.executeQuery();
-
+        //resultSet3.
         while (resultSet3.next()) {
         }
+        logger.debug("{}", resultSet3);
 
         resultSet.close();
         resultSet2.close();
