@@ -35,12 +35,12 @@ public enum DatabaseType {
         this.matchNames = matchNames;
     }
 
-    // 컨버터 인스턴스를 반환합니다.
+    // 컨버터 인스턴스를 반환한다.
     public ParameterConverter getParameterConverter() {
         return getParameterConverterInstance(this);
     }
 
-    // 현재 데이터소스와 매칭되는 데이터베이스 타입을 찾습니다.
+    // 현재 데이터소스와 매칭되는 데이터베이스 타입을 찾는다.
     public static DatabaseType find(DataSource datasource) {
         String databaseName = getDatabaseName(datasource);
         return findDatabaseType(databaseName);
@@ -85,7 +85,7 @@ final class DatabaseTypeUtil {
 final class DatabaseInstanceHolder {
     private final static Map<DatabaseType, ParameterConverter> instanceHolder = new ConcurrentHashMap<>();
 
-    // 파라미터 컨버터 인스턴스를 생성 및 보관합니다.
+    // 파라미터 컨버터 인스턴스를 생성 및 보관한다.
     // 확률은 낮지만 싱글톤이 여러개 생성되는것을 방지한다.
     // 데이터 소스는 한꺼번에 생성하지 않으므로 synchronized를 사용하더라도 문제없다고 판단됨.
     static synchronized ParameterConverter getParameterConverterInstance(DatabaseType type) {

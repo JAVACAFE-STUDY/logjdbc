@@ -22,7 +22,7 @@ public class LoggableDataSourceConfig {
     private SqlLogger sqlLogger;
     private ResultSetLogger resultSetLogger;
 
-    // 각 항목들을 초기화시킵니다.
+    // 각 항목들을 초기화시킨다.
     public LoggableDataSourceConfig(DatabaseType type, SqlFormatter formatter) {
         this.type = type;
         this.converter = type.getParameterConverter();
