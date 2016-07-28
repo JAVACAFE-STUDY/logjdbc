@@ -1,17 +1,17 @@
 package net.chandol.datasource;
 
 
-import ch.qos.logback.classic.spi.LoggingEvent;
-import net.chandol.datasource.testhelper.TestAppender;
+import net.chandol.datasource._testhelper.AutoLogInitializer;
 import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.List;
 
-import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
+import static net.chandol.datasource.DummyDataSource.getDummyH2DataSource;
 
-public class LoggableDataSourceTest {
+
+public class LoggableDataSourceTest extends AutoLogInitializer {
+
     @Test
     public void core() throws SQLException {
         DataSource h2DataSource = getDummyH2DataSource();

@@ -3,7 +3,7 @@ package net.chandol.datasource.config;
 import net.chandol.datasource.sql.parameter.converter.BaseParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.MysqlParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
-import net.chandol.datasource.testhelper.DummyDataSource;
+import net.chandol.datasource.DummyDataSource;
 import org.junit.Test;
 import org.mockito.Mockito;
 
