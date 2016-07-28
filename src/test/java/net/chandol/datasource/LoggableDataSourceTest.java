@@ -22,7 +22,7 @@ public class LoggableDataSourceTest {
         Statement statement = connection.createStatement();
         statement.execute("CREATE TABLE CUSTOMERS (ID INT NOT NULL, NAME VARCHAR (20) NOT NULL, AGE INT NOT NULL, ADDRESS CHAR (25), SALARY DECIMAL(18, 2), PRIMARY KEY (ID));");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (2, 'Khilan', 25, 'Delhi', 1500.00 );");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (3, '한글', 23, 'Kota', 2000.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (3, 'kaushik', 23, 'Kota', 2000.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (4, 'Chaitali', 25, 'Mumbai', 6500.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (6, 'Komal', 22, 'MP', 4500.00 );");
@@ -40,18 +40,14 @@ public class LoggableDataSourceTest {
         while (resultSet2.next()) {
         }
 
-        resultSet2.close();
-        resultSet.close();
+        PreparedStatement pstmt3 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE  NAME=?");
+        pstmt3.setString(1, "Hardik");
+        ResultSet resultSet3 = pstmt3.executeQuery();
 
-        List<LoggingEvent> events = TestAppender.getEvents();
-        for(LoggingEvent event : events){
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println(event);
+        while (resultSet3.next()) {
         }
-        System.out.println("총 사이즈는:" + events.size());
 
+        resultSet.close();
     }
 
 }

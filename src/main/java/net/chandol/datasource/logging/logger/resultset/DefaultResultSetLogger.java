@@ -21,7 +21,7 @@ public class DefaultResultSetLogger implements ResultSetLogger {
     public DefaultResultSetLogger(){
         renderer = new V2_AsciiTableRenderer();
 
-        renderer.setTheme(V2_E_TableThemes.ASC7_LATEX_STYLE_STRONG.get());
+        renderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
         renderer.setWidth(new WidthLongestLine());
     }
 
