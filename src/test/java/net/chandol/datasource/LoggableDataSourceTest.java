@@ -1,10 +1,13 @@
 package net.chandol.datasource;
 
 
+import ch.qos.logback.classic.spi.LoggingEvent;
+import net.chandol.datasource.testhelper.TestAppender;
 import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.List;
 
 import static net.chandol.datasource.testhelper.DummyDataSource.getDummyH2DataSource;
 
@@ -19,7 +22,7 @@ public class LoggableDataSourceTest {
         Statement statement = connection.createStatement();
         statement.execute("CREATE TABLE CUSTOMERS (ID INT NOT NULL, NAME VARCHAR (20) NOT NULL, AGE INT NOT NULL, ADDRESS CHAR (25), SALARY DECIMAL(18, 2), PRIMARY KEY (ID));");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (2, 'Khilan', 25, 'Delhi', 1500.00 );");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (3, 'kaushik', 23, 'Kota', 2000.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (3, '한글', 23, 'Kota', 2000.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (4, 'Chaitali', 25, 'Mumbai', 6500.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00 );");
         statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (6, 'Komal', 22, 'MP', 4500.00 );");
@@ -39,6 +42,16 @@ public class LoggableDataSourceTest {
 
         resultSet2.close();
         resultSet.close();
+
+        List<LoggingEvent> events = TestAppender.getEvents();
+        for(LoggingEvent event : events){
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println(event);
+        }
+        System.out.println("총 사이즈는:" + events.size());
+
     }
 
 }
