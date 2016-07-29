@@ -3,7 +3,7 @@ package net.chandol.datasource.config;
 import net.chandol.datasource.sql.parameter.converter.BaseParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.MysqlParameterConverter;
 import net.chandol.datasource.sql.parameter.converter.ParameterConverter;
-import net.chandol.datasource.DummyDataSource;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -13,7 +13,10 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import static net.chandol.datasource.config.DatabaseType.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 
 public class DatabaseTypeTest {
 
@@ -26,8 +29,8 @@ public class DatabaseTypeTest {
         ParameterConverter mySqlConverter = MYSQL.getParameterConverter();
 
         //then
-        assertThat(h2Converter).isInstanceOf(BaseParameterConverter.class);
-        assertThat(mySqlConverter).isInstanceOf(MysqlParameterConverter.class);
+        assertThat(h2Converter, instanceOf(BaseParameterConverter.class));
+        assertThat(mySqlConverter, instanceOf(MysqlParameterConverter.class));
     }
 
     @Test
@@ -37,23 +40,11 @@ public class DatabaseTypeTest {
         ParameterConverter h2Converter2 = H2.getParameterConverter();
 
         //then
-        assertThat(h2Converter1).isSameAs(h2Converter2);
+        assertThat(h2Converter1, CoreMatchers.sameInstance(h2Converter2));
     }
 
     @Test
-    public void 데이터베이스_타입_찾기1() throws Exception {
-        //given
-        DataSource H2DataSource = DummyDataSource.getDummyH2DataSource();
-
-        //when
-        DatabaseType h2Type = DatabaseType.find(H2DataSource);
-
-        //then
-        assertThat(h2Type).isSameAs(H2);
-    }
-
-    @Test
-    public void 데이터베이스_타입_찾기2() throws Exception {
+    public void 데이터베이스_타입_찾기() throws Exception {
         //given
         DataSource H2DataSource = getMockDatasourceWithDatabaseName("H2");
         DataSource OracleDataSource = getMockDatasourceWithDatabaseName("Oracle");
@@ -65,9 +56,9 @@ public class DatabaseTypeTest {
         DatabaseType tiberoType = DatabaseType.find(UnknownDataSource);
 
         //then
-        assertThat(h2Type).isSameAs(H2);
-        assertThat(oracleType).isSameAs(ORACLE);
-        assertThat(tiberoType).isSameAs(UNKNOWN);
+        assertThat(h2Type, is(H2));
+        assertThat(oracleType, is(ORACLE));
+        assertThat(tiberoType, is(UNKNOWN));
     }
 
     private DataSource getMockDatasourceWithDatabaseName(String name) throws SQLException {
