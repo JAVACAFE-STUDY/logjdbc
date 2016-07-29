@@ -9,7 +9,7 @@
         </layout>
     </appender>
 
-    <appender name="TEST" class="net.chandol.datasource._testhelper.TestAppender"/>
+    <appender name="TEST" class="net.chandol.logjdbc._testhelper.TestAppender"/>
 
     <logger name="net.chandol" level="debug" additivity="false">
         <appender-ref ref="STDOUT" />
