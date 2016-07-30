@@ -50,6 +50,9 @@ public class LogJdbcDataSourceTest extends AutoLogInitializer {
         resultSet.close();
         resultSet2.close();
         resultSet3.close();
+
+        connection.rollback();
+        connection.close();
     }
 
 }

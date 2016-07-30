@@ -52,7 +52,6 @@ public class ResultSetCollectorTest {
 
         //then
         resultSet.close();
-        connection.close();
 
         ResultSetData resultSetData = collector.getResultSetData();
         assertThat(resultSetData.getColumns(), hasItems("ID", "NAME", "AGE", "ADDRESS"));
@@ -65,6 +64,7 @@ public class ResultSetCollectorTest {
 
     @After
     public void close() throws SQLException {
+        connection.rollback();
         connection.close();
     }
 
