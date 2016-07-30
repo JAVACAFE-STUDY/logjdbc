@@ -3,7 +3,7 @@ package net.chandol.logjdbc.logging.printer.sql;
 import net.chandol.logjdbc.config.LogJdbcConfig;
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
-import net.chandol.logjdbc.logging.printer.sql.converter.ParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,8 +1,8 @@
 package net.chandol.logjdbc.config;
 
-import net.chandol.logjdbc.logging.printer.sql.converter.BaseParameterConverter;
-import net.chandol.logjdbc.logging.printer.sql.converter.MysqlParameterConverter;
-import net.chandol.logjdbc.logging.printer.sql.converter.ParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.BaseParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.MysqlParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.mockito.Mockito;

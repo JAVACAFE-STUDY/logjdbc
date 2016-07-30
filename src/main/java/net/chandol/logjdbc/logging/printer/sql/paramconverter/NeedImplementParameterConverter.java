@@ -1,4 +1,4 @@
-package net.chandol.logjdbc.logging.printer.sql.converter;
+package net.chandol.logjdbc.logging.printer.sql.paramconverter;
 
 import net.chandol.logjdbc.except.LoggableDataSourceException;
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;

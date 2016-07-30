@@ -6,7 +6,7 @@ import net.chandol.logjdbc.logging.printer.sql.DefaultSqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.SqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.formatter.DefaultSqlFormatter;
 import net.chandol.logjdbc.logging.printer.sql.formatter.SqlFormatter;
-import net.chandol.logjdbc.logging.printer.sql.converter.ParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 
 
 import javax.sql.DataSource;

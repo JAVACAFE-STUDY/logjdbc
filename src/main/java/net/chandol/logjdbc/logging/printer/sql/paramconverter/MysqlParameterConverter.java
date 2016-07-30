@@ -1,4 +1,4 @@
-package net.chandol.logjdbc.logging.printer.sql.converter;
+package net.chandol.logjdbc.logging.printer.sql.paramconverter;
 
 
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;
@@ -6,8 +6,8 @@ import net.chandol.logjdbc.logging.collector.parameter.ParameterType;
 
 import java.util.Date;
 
-import static net.chandol.logjdbc.logging.printer.sql.converter.ConverterUtil.dateFormat;
-import static net.chandol.logjdbc.logging.printer.sql.converter.ConverterUtil.strParam;
+import static net.chandol.logjdbc.logging.printer.sql.paramconverter.ConverterUtil.dateFormat;
+import static net.chandol.logjdbc.logging.printer.sql.paramconverter.ConverterUtil.strParam;
 import static net.chandol.logjdbc.logging.collector.parameter.ParameterType.*;
 
 /**

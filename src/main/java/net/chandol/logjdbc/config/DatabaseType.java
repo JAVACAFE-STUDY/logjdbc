@@ -1,10 +1,10 @@
 package net.chandol.logjdbc.config;
 
 import net.chandol.logjdbc.except.LoggableDataSourceException;
-import net.chandol.logjdbc.logging.printer.sql.converter.BaseParameterConverter;
-import net.chandol.logjdbc.logging.printer.sql.converter.MysqlParameterConverter;
-import net.chandol.logjdbc.logging.printer.sql.converter.OracleParameterConverter;
-import net.chandol.logjdbc.logging.printer.sql.converter.ParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.BaseParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.MysqlParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.OracleParameterConverter;
+import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

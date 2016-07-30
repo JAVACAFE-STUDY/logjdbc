@@ -1,4 +1,4 @@
-package net.chandol.logjdbc.logging.printer.sql.converter;
+package net.chandol.logjdbc.logging.printer.sql.paramconverter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
