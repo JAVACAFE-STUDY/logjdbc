@@ -8,7 +8,7 @@ import net.chandol.logjdbc.logging.printer.LogPrinter;
 import java.sql.ResultSetMetaData;
 
 /**
- * JDBC작업중 발생하는 로그성 자료들을 모으고 정제한다.
+ * JDBC 작업에서 발생하는 로그성 자료들을 모으고 출력한다.
  */
 public class LogContext {
     private LogJdbcConfig config;

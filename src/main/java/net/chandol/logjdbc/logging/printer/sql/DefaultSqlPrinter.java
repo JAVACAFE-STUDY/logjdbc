@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class DefaultSqlPrinter implements SqlPrinter {
-    private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.jdbc.sql");
-    private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.jdbc.parameter");
+    private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.logjdbc.sql");
+    private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.logjdbc.parameter");
 
     @Override
     public void logSql(LogJdbcConfig config, String templateSql, ParameterCollector parameterCollector) {
