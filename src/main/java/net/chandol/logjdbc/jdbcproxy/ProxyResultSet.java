@@ -16,15 +16,16 @@ public class ProxyResultSet implements ResultSet {
 
     private ResultSet _resultSet;
     private ResultSetCollector rsCollector;
-    private LogContext logContext;
+    private LogContext context;
 
-    ProxyResultSet(LogContext logContext, ResultSet resultSet) {
-        this.logContext = logContext;
+    ProxyResultSet(LogContext context, ResultSet resultSet) {
+        this.context = context;
         this._resultSet = resultSet;
 
         try {
-            this.rsCollector = logContext.initResultSetCollector(getMetaData());
+            this.rsCollector = context.initResultSetCollector(getMetaData());
         } catch (SQLException e) {
+            context.printLog();
             throw new LoggableDataSourceException(e);
         }
     }
@@ -44,7 +45,7 @@ public class ProxyResultSet implements ResultSet {
     @Override
     public void close() throws SQLException {
         //끝까지 다 읽었을때에만 호출되게 해놓았음, 더 좋은 방법이 있을 경우 채택하도록 하자!
-        logContext.printLog();
+        context.printLog();
         _resultSet.close();
     }
 
