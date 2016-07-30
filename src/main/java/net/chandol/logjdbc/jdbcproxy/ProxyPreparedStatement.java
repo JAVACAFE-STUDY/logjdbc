@@ -13,7 +13,7 @@ import java.util.Calendar;
 import static net.chandol.logjdbc.logging.collector.parameter.ParameterType.*;
 
 public class ProxyPreparedStatement extends ProxyStatement implements PreparedStatement {
-    protected PreparedStatement _pstmt;
+    private PreparedStatement _pstmt;
     private ParameterCollector paramCollector;
 
     public ProxyPreparedStatement(LogContext context, PreparedStatement preparedStatement) {
@@ -24,308 +24,560 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
 
     @Override
     public ResultSet executeQuery() throws SQLException {
-        ResultSet resultSet = _pstmt.executeQuery();
-        return new ProxyResultSet(context, resultSet);
+        try {
+            ResultSet resultSet = _pstmt.executeQuery();
+            return new ProxyResultSet(context, resultSet);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public int executeUpdate() throws SQLException {
-        context.printLog();
-        return _pstmt.executeUpdate();
+        try {
+            return _pstmt.executeUpdate();
+        } finally {
+            context.printLog();
+        }
     }
 
     @Override
     public boolean execute() throws SQLException {
-        context.printLog();
-        return _pstmt.execute();
+        try {
+            return _pstmt.execute();
+        } finally {
+            context.printLog();
+        }
     }
 
     @Override
     public void setNull(int index, int sqlType) throws SQLException {
-        paramCollector.add(index, _Null, null);
-        _pstmt.setNull(index, sqlType);
+        try {
+            _pstmt.setNull(index, sqlType);
+            paramCollector.add(index, _Null, null);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBoolean(int index, boolean x) throws SQLException {
-        paramCollector.add(index, _Boolean, x);
-        _pstmt.setBoolean(index, x);
+        try {
+            _pstmt.setBoolean(index, x);
+            paramCollector.add(index, _Boolean, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setByte(int index, byte x) throws SQLException {
-        paramCollector.add(index, _Byte, x);
-        _pstmt.setByte(index, x);
+        try {
+            _pstmt.setByte(index, x);
+            paramCollector.add(index, _Byte, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setShort(int index, short x) throws SQLException {
-        paramCollector.add(index, _Short, x);
-        _pstmt.setShort(index, x);
+        try {
+            _pstmt.setShort(index, x);
+            paramCollector.add(index, _Short, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setInt(int index, int x) throws SQLException {
-        paramCollector.add(index, _Int, x);
-        _pstmt.setInt(index, x);
+        try {
+            _pstmt.setInt(index, x);
+            paramCollector.add(index, _Int, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setLong(int index, long x) throws SQLException {
-        paramCollector.add(index, _Long, x);
-        _pstmt.setLong(index, x);
+        try {
+            _pstmt.setLong(index, x);
+            paramCollector.add(index, _Long, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setFloat(int index, float x) throws SQLException {
-        paramCollector.add(index, _Float, x);
-        _pstmt.setFloat(index, x);
+        try {
+            _pstmt.setFloat(index, x);
+            paramCollector.add(index, _Float, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setDouble(int index, double x) throws SQLException {
-        paramCollector.add(index, _Double, x);
-        _pstmt.setDouble(index, x);
+        try {
+            _pstmt.setDouble(index, x);
+            paramCollector.add(index, _Double, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBigDecimal(int index, BigDecimal x) throws SQLException {
-        paramCollector.add(index, _BigDecimal, x);
-        _pstmt.setBigDecimal(index, x);
+        try {
+            _pstmt.setBigDecimal(index, x);
+            paramCollector.add(index, _BigDecimal, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setString(int index, String x) throws SQLException {
-        paramCollector.add(index, _String, x);
-        _pstmt.setString(index, x);
+        try {
+            _pstmt.setString(index, x);
+            paramCollector.add(index, _String, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBytes(int index, byte[] x) throws SQLException {
-        paramCollector.add(index, _Bytes, "<byte[]>");
-        _pstmt.setBytes(index, x);
+        try {
+            _pstmt.setBytes(index, x);
+            paramCollector.add(index, _Bytes, "<byte[]>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setDate(int index, Date x) throws SQLException {
-        paramCollector.add(index, _Date, x);
-        _pstmt.setDate(index, x);
+        try {
+            _pstmt.setDate(index, x);
+            paramCollector.add(index, _Date, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setTime(int index, Time x) throws SQLException {
-        paramCollector.add(index, _Time, x);
-        _pstmt.setTime(index, x);
+        try {
+            _pstmt.setTime(index, x);
+            paramCollector.add(index, _Time, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setTimestamp(int index, Timestamp x) throws SQLException {
-        paramCollector.add(index, _Timestamp, x);
-        _pstmt.setTimestamp(index, x);
+        try {
+            _pstmt.setTimestamp(index, x);
+            paramCollector.add(index, _Timestamp, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setAsciiStream(int index, InputStream x, int length) throws SQLException {
-        paramCollector.add(index, _AsciiStream, "<AsciiStream length : " + length + ">");
-        _pstmt.setAsciiStream(index, x, length);
+
+        try {
+            _pstmt.setAsciiStream(index, x, length);
+            paramCollector.add(index, _AsciiStream, "<AsciiStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setUnicodeStream(int index, InputStream x, int length) throws SQLException {
-        paramCollector.add(index, UnicodeStream, "<UnicodeStream length : " + length + ">");
-        _pstmt.setUnicodeStream(index, x, length);
+        try {
+            _pstmt.setUnicodeStream(index, x, length);
+            paramCollector.add(index, UnicodeStream, "<UnicodeStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBinaryStream(int index, InputStream x, int length) throws SQLException {
-        paramCollector.add(index, _BinaryStream, "<BinaryStream length : " + length + ">");
-        _pstmt.setBinaryStream(index, x, length);
+        try {
+            _pstmt.setBinaryStream(index, x, length);
+            paramCollector.add(index, _BinaryStream, "<BinaryStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setObject(int index, Object x, int targetSqlType) throws SQLException {
-        paramCollector.add(index, _Object, "<Object>");
-        _pstmt.setObject(index, x, targetSqlType);
+        try {
+            _pstmt.setObject(index, x, targetSqlType);
+            paramCollector.add(index, _Object, "<Object>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setObject(int index, Object x) throws SQLException {
-        paramCollector.add(index, _Object, "<Object>");
-        _pstmt.setObject(index, x);
+        try {
+            _pstmt.setObject(index, x);
+            paramCollector.add(index, _Object, "<Object>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setCharacterStream(int index, Reader reader, int length) throws SQLException {
-        paramCollector.add(index, _CharacterStream, "<CharacterStream length : " + length + ">");
-        _pstmt.setCharacterStream(index, reader, length);
+        try {
+            _pstmt.setCharacterStream(index, reader, length);
+            paramCollector.add(index, _CharacterStream, "<CharacterStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setRef(int index, Ref x) throws SQLException {
-        paramCollector.add(index, _Ref, x);
-        _pstmt.setRef(index, x);
+        try {
+            _pstmt.setRef(index, x);
+            paramCollector.add(index, _Ref, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBlob(int index, Blob x) throws SQLException {
-        paramCollector.add(index, _Blob, "<Blob of size " + x.length() + ">");
-        _pstmt.setBlob(index, x);
+        try {
+            _pstmt.setBlob(index, x);
+            paramCollector.add(index, _Blob, "<Blob of size " + x.length() + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setClob(int index, Clob x) throws SQLException {
-        paramCollector.add(index, _Clob, "<Clob of size " + x.length() + ">");
-        _pstmt.setClob(index, x);
+        try {
+            _pstmt.setClob(index, x);
+            paramCollector.add(index, _Clob, "<Clob of size " + x.length() + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setArray(int index, Array x) throws SQLException {
-        paramCollector.add(index, _Array, "<Array>");
-        _pstmt.setArray(index, x);
+        try {
+            _pstmt.setArray(index, x);
+            paramCollector.add(index, _Array, "<Array>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setDate(int index, Date x, Calendar cal) throws SQLException {
-        paramCollector.add(index, _Date, x);
-        _pstmt.setDate(index, x, cal);
+        try {
+            _pstmt.setDate(index, x, cal);
+            paramCollector.add(index, _Date, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setTime(int index, Time x, Calendar cal) throws SQLException {
-        paramCollector.add(index, _Time, x);
-        _pstmt.setTime(index, x, cal);
+        try {
+            _pstmt.setTime(index, x, cal);
+            paramCollector.add(index, _Time, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setTimestamp(int index, Timestamp x, Calendar cal) throws SQLException {
-        paramCollector.add(index, _Timestamp, x);
-        _pstmt.setTimestamp(index, x, cal);
+        try {
+            _pstmt.setTimestamp(index, x, cal);
+            paramCollector.add(index, _Timestamp, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNull(int index, int sqlType, String typeName) throws SQLException {
-        paramCollector.add(index, _Null, null);
-        _pstmt.setNull(index, sqlType, typeName);
+        try {
+            _pstmt.setNull(index, sqlType, typeName);
+            paramCollector.add(index, _Null, null);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setURL(int index, URL x) throws SQLException {
-        paramCollector.add(index, _URL, x);
-        _pstmt.setURL(index, x);
+        try {
+            _pstmt.setURL(index, x);
+            paramCollector.add(index, _URL, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setRowId(int index, RowId x) throws SQLException {
-        paramCollector.add(index, _RowId, x);
-        _pstmt.setRowId(index, x);
+        try {
+            _pstmt.setRowId(index, x);
+            paramCollector.add(index, _RowId, x);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNString(int index, String value) throws SQLException {
-        paramCollector.add(index, _NString, value);
-        _pstmt.setNString(index, value);
+        try {
+            _pstmt.setNString(index, value);
+            paramCollector.add(index, _NString, value);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNCharacterStream(int index, Reader value, long length) throws SQLException {
-        paramCollector.add(index, _NCharacterStream, "<Reader of length " + length + ">");
-        _pstmt.setNCharacterStream(index, value, length);
+        try {
+            _pstmt.setNCharacterStream(index, value, length);
+            paramCollector.add(index, _NCharacterStream, "<Reader of length " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNClob(int index, NClob value) throws SQLException {
-        paramCollector.add(index, _NClob, "<NClob>");
-        _pstmt.setNClob(index, value);
+        try {
+            _pstmt.setNClob(index, value);
+            paramCollector.add(index, _NClob, "<NClob>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setClob(int index, Reader reader, long length) throws SQLException {
-        paramCollector.add(index, _Clob, "<Reader>");
-        _pstmt.setClob(index, reader, length);
+        try {
+            _pstmt.setClob(index, reader, length);
+            paramCollector.add(index, _Clob, "<Reader>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBlob(int index, InputStream inputStream, long length) throws SQLException {
-        paramCollector.add(index, _Blob, "<InputStream length : " + length + ">");
-        _pstmt.setBlob(index, inputStream, length);
+        try {
+            _pstmt.setBlob(index, inputStream, length);
+            paramCollector.add(index, _Blob, "<InputStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNClob(int index, Reader reader, long length) throws SQLException {
-        paramCollector.add(index, _NClob, "<Reader length : " + length + ">");
-        _pstmt.setNClob(index, reader, length);
+        try {
+            _pstmt.setNClob(index, reader, length);
+            paramCollector.add(index, _NClob, "<Reader length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setSQLXML(int index, SQLXML xmlObject) throws SQLException {
-        paramCollector.add(index, _SQLXML, xmlObject);
-        _pstmt.setSQLXML(index, xmlObject);
+        try {
+            _pstmt.setSQLXML(index, xmlObject);
+            paramCollector.add(index, _SQLXML, xmlObject);
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setObject(int index, Object x, int targetSqlType, int scaleOrLength) throws SQLException {
-        paramCollector.add(index, _Object, "<Object>");
-        _pstmt.setObject(index, x, targetSqlType, scaleOrLength);
+        try {
+            _pstmt.setObject(index, x, targetSqlType, scaleOrLength);
+            paramCollector.add(index, _Object, "<Object>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setAsciiStream(int index, InputStream x, long length) throws SQLException {
-        paramCollector.add(index, _AsciiStream, "<InputStream length : " + length + ">");
-        _pstmt.setAsciiStream(index, x, length);
+        try {
+            _pstmt.setAsciiStream(index, x, length);
+            paramCollector.add(index, _AsciiStream, "<InputStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBinaryStream(int index, InputStream x, long length) throws SQLException {
-        paramCollector.add(index, _BinaryStream, "<InputStream length : " + length + ">");
-        _pstmt.setBinaryStream(index, x, length);
+        try {
+            _pstmt.setBinaryStream(index, x, length);
+            paramCollector.add(index, _BinaryStream, "<InputStream length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setCharacterStream(int index, Reader reader, long length) throws SQLException {
-        paramCollector.add(index, _CharacterStream, "<Reader length : " + length + ">");
-        _pstmt.setCharacterStream(index, reader, length);
+        try {
+            _pstmt.setCharacterStream(index, reader, length);
+            paramCollector.add(index, _CharacterStream, "<Reader length : " + length + ">");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setAsciiStream(int index, InputStream x) throws SQLException {
-        paramCollector.add(index, _AsciiStream, "<InputStream>");
-        _pstmt.setAsciiStream(index, x);
+        try {
+            _pstmt.setAsciiStream(index, x);
+            paramCollector.add(index, _AsciiStream, "<InputStream>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBinaryStream(int index, InputStream x) throws SQLException {
-        paramCollector.add(index, _BinaryStream, "<InputStream>");
-        _pstmt.setBinaryStream(index, x);
+        try {
+            _pstmt.setBinaryStream(index, x);
+            paramCollector.add(index, _BinaryStream, "<InputStream>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setCharacterStream(int index, Reader reader) throws SQLException {
-        paramCollector.add(index, _CharacterStream, "<Reader>");
-        _pstmt.setCharacterStream(index, reader);
+        try {
+            _pstmt.setCharacterStream(index, reader);
+            paramCollector.add(index, _CharacterStream, "<Reader>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNCharacterStream(int index, Reader value) throws SQLException {
-        paramCollector.add(index, _NCharacterStream, "<Reader>");
-        _pstmt.setNCharacterStream(index, value);
+        try {
+            _pstmt.setNCharacterStream(index, value);
+            paramCollector.add(index, _NCharacterStream, "<Reader>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setClob(int index, Reader reader) throws SQLException {
-        paramCollector.add(index, _Clob, "<Reader>");
-        _pstmt.setClob(index, reader);
+        try {
+            _pstmt.setClob(index, reader);
+            paramCollector.add(index, _Clob, "<Reader>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setBlob(int index, InputStream inputStream) throws SQLException {
-        paramCollector.add(index, _Blob, "<InputStream>");
-        _pstmt.setBlob(index, inputStream);
+        try {
+            _pstmt.setBlob(index, inputStream);
+            paramCollector.add(index, _Blob, "<InputStream>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
     public void setNClob(int index, Reader reader) throws SQLException {
-        paramCollector.add(index, _NClob, "<Reader>");
-        _pstmt.setNClob(index, reader);
+        try {
+            _pstmt.setNClob(index, reader);
+            paramCollector.add(index, _NClob, "<Reader>");
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
     }
 
     @Override
