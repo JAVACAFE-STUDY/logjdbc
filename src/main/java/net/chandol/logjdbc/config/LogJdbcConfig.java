@@ -1,6 +1,6 @@
 package net.chandol.logjdbc.config;
 
-import net.chandol.logjdbc.logging.printer.resultset.DefaultResultSetPrinter;
+import net.chandol.logjdbc.logging.printer.resultset.ResultSetTablePrinter;
 import net.chandol.logjdbc.logging.printer.resultset.ResultSetPrinter;
 import net.chandol.logjdbc.logging.printer.sql.DefaultSqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.SqlPrinter;
@@ -30,7 +30,7 @@ public class LogJdbcConfig {
 
         //TODO need singleton
         this.sqlPrinter = new DefaultSqlPrinter();
-        this.resultSetPrinter = new DefaultResultSetPrinter();
+        this.resultSetPrinter = new ResultSetTablePrinter();
     }
 
     public LogJdbcConfig(DatabaseType type) {

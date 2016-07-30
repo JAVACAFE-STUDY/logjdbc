@@ -7,7 +7,9 @@ import net.chandol.logjdbc.logging.printer.LogPrinter;
 
 import java.sql.ResultSetMetaData;
 
-
+/**
+ * JDBC 작업에서 발생하는 로그성 자료들을 모으고 출력한다.
+ */
 public class LogContext {
     private LogJdbcConfig config;
     private String sql;
@@ -17,10 +19,11 @@ public class LogContext {
     // TODO 리팩토링
     public void printLog() {
         // parameter가 없는 경우
-        if (parameterCollector != null)
+        if (parameterCollector != null){
             LogPrinter.logSql(config, sql, parameterCollector);
-        else
-            LogPrinter.logSql(config, sql);
+        } else{
+            if(isSqlExist()) LogPrinter.logSql(config, sql);
+        }
 
         if(resultSetCollector!=null)
             LogPrinter.logResultSet(config, resultSetCollector);
@@ -40,12 +43,16 @@ public class LogContext {
         return this.resultSetCollector;
     }
 
+    private boolean isSqlExist() {
+        return sql!=null && !sql.isEmpty();
+    }
+
     /* Constructor */
     private LogContext(LogJdbcConfig config) {
         this.config = config;
     }
 
-    public LogContext(LogJdbcConfig config, String sql) {
+    private LogContext(LogJdbcConfig config, String sql) {
         this.config = config;
         this.sql = sql;
     }

@@ -11,11 +11,11 @@ public class ParameterCollector {
     private List<Parameter> parameters = new LinkedList<>();
 
     public void add(int index, ParameterType type, Object value) {
-        parameters.add(index - 1, new Parameter(type, value));
+        parameters.add(index - 1, Parameter.of(type, value));
     }
 
     public void add(int index, ParameterType type, String description) {
-        parameters.add(index - 1, new Parameter(type, description));
+        parameters.add(index - 1, Parameter.of(type, description));
     }
 
     public List<Parameter> getAll(){

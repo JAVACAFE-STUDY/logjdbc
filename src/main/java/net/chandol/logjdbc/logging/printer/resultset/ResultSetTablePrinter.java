@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class DefaultResultSetPrinter implements ResultSetPrinter {
+public class ResultSetTablePrinter implements ResultSetPrinter {
 
-    private static final Logger rsLogger = LoggerFactory.getLogger("net.chandol.jdbc.resultset");
+    private static final Logger rsLogger = LoggerFactory.getLogger("net.chandol.logjdbc.resultset");
 
     private V2_AsciiTableRenderer renderer;
 
-    public DefaultResultSetPrinter(){
+    public ResultSetTablePrinter(){
         renderer = new V2_AsciiTableRenderer();
 
         renderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
