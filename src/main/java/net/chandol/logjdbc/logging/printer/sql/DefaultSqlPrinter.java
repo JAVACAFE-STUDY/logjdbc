@@ -1,7 +1,6 @@
 package net.chandol.logjdbc.logging.printer.sql;
 
 import net.chandol.logjdbc.config.LogJdbcConfig;
-import net.chandol.logjdbc.logging.collector.sql.SqlParmeterBinder;
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.printer.sql.converter.ParameterConverter;
@@ -54,5 +53,15 @@ public class DefaultSqlPrinter implements SqlPrinter {
         builder.append("]");
 
         return builder.toString();
+    }
+
+    private static class SqlParmeterBinder {
+        static String bind(String templateSql, List<String> params) {
+            // TODO 성능 개선필요
+            for (String param : params)
+                templateSql = templateSql.replaceFirst("\\?", param);
+
+            return templateSql;
+        }
     }
 }
