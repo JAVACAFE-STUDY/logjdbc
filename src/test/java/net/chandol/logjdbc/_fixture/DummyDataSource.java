@@ -1,4 +1,4 @@
-package net.chandol.logjdbc._testhelper;
+package net.chandol.logjdbc._fixture;
 
 import org.h2.jdbcx.JdbcDataSource;
 

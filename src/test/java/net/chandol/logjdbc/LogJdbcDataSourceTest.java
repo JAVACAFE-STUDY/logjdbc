@@ -7,7 +7,7 @@ import org.junit.Test;
 import javax.sql.DataSource;
 import java.sql.*;
 
-import static net.chandol.logjdbc._testhelper.DummyDataSource.getDummyH2DataSource;
+import static net.chandol.logjdbc._fixture.DummyDataSource.getDummyH2DataSource;
 
 
 public class LogJdbcDataSourceTest extends AutoLogInitializer {

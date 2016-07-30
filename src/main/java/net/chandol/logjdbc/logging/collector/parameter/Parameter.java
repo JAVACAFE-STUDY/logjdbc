@@ -4,7 +4,7 @@ public class Parameter {
     private Object value;
     private ParameterType type;
 
-    public Parameter(ParameterType type, Object value) {
+    private Parameter(ParameterType type, Object value) {
         this.value = value;
         this.type = type;
     }
@@ -15,5 +15,9 @@ public class Parameter {
 
     public ParameterType getType() {
         return type;
+    }
+
+    public static Parameter of(ParameterType type, Object value){
+        return new Parameter(type, value);
     }
 }
