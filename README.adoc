@@ -1,5 +1,9 @@
 = Loggable Datasource
 
+image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=develop["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
+
+image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=master["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
+
 == Overview
 
 SQL 로깅 라이브러리. JDBC에서 발생하는 로그를 파라미터와 바인딩하여 보여줍니다
