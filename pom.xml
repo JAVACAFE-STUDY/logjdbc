@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.chandol.logjdbc</groupId>
-    <artifactId>core</artifactId>
+    <groupId>net.chandol</groupId>
+    <artifactId>logjdbc</artifactId>
     <version>0.0.2</version>
 
     <dependencies>
