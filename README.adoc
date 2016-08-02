@@ -1,14 +1,13 @@
-= Loggable Datasource
-
-image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=develop["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
-
-image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=master["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
+= logJdbc
 
 == Overview
 
-SQL 로깅 라이브러리. JDBC에서 발생하는 로그를 파라미터와 바인딩하여 보여줍니다
+image:https://maven-badges.herokuapp.com/maven-central/net.chandol/logjdbc/badge.png["maven-central"]
+image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=develop["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
 
-image::https://cloud.githubusercontent.com/assets/3116341/17138215/196a15f2-537a-11e6-8d93-1ee43498c23d.png[]
+SQL 로깅 라이브러리. JDBC작업시 SQL, Parameter 그리고 resultSet을 로그로 출력합니다.
+
+image:https://cloud.githubusercontent.com/assets/3116341/17316631/9719aa4a-58b0-11e6-8146-75507ae9a8c3.png[]
 
 == 버전
 
@@ -16,18 +15,16 @@ JDK 1.7 이상
 
 == 상세
 
-Database는 데이터가 최종적으로 저장되는 장소입니다. 그렇기 때문에 모든 데이터의 시작점이기도 합니다.
+Database는 데이터가 최종적으로 저장되는 장소이며 프로그램에서 데이터들의 시작점이기도 합니다.
 
 로직이 정상적으로 수행되었는지를 가장 명쾌하게 알 수 있는 부분은 이 SQL문이 정상적으로 만들어졌는지를 확인해보는 일입니다.
+하지만 Java에서 로그로 발생되는 SQL문은 파라미터와 분리된채로 나오게 되며, select문이 길어질수록 이러한 단순 매핑 과정이 쉽지않았습니다.
 
-Java에서 로그로 발생되는 SQL문은 파라미터와 분리된채로 나오게 됩니다.
-select문이 길어질수록 이러한 단순 매핑 과정은 더욱 힘들곤 했었기 때문에 이 라이브러리를 제작하게 되었습니다.
-
-기존 라이브러리 log4jdbc 및 p4sql의 경우, 개발이 중단된 상태이며, 여기에 더해 SQL formatting등 필요했던 기능들이 부족해 직접 프로젝트를 만들게 되었습니다.
+기존 라이브러리 log4jdbc 및 p4sql의 경우에 설정이 복잡하고 프로젝트가 중지된 상태로 방치되어 있고, 여기에 SQL formatting등 개인적으로 필요했던 기능들을 추가하는것을 목적으로 프로젝트를 시작하였습니다.
 
 == 사용법
 
-`LoggableDataSource` 생성자로 기존 `DataSource` 객체를 추가하여 로깅을 설정할 수 있습니다.
+`LogJdbcDataSource` 로 기존 `DataSource` 객체를 추가하여 로깅을 설정할 수 있습니다.
 
 [source, java]
 ----
@@ -40,10 +37,8 @@ public DataSource simpleDataSource() {
     realDataSource.setPassword("");
 
     // LoggableDataSource의 생성자로 기존 DataSource를 넣으면 설정이 완료됩니다.
-    DataSource dataSource = new LoggableDataSource(realDataSource);
+    DataSource dataSource = new LogJdbcDataSource(realDataSource);
 
     return dataSource;
 }
 ----
-
-
