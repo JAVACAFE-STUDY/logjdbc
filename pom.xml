@@ -6,7 +6,7 @@
 
     <groupId>net.chandol</groupId>
     <artifactId>loggable-datasource</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
 
     <dependencies>
 
