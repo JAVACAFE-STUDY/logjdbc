@@ -6,7 +6,7 @@
 
     <groupId>net.chandol</groupId>
     <artifactId>logjdbc</artifactId>
-    <version>0.0.2</version>
+    <version>0.1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -70,6 +70,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- test용 데이터베이스 h2-->
