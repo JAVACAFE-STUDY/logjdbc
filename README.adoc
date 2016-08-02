@@ -1,8 +1,18 @@
 = Loggable Datasource
 
+image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=develop["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
+
+image:https://travis-ci.org/JAVACAFE-STUDY/logjdbc.svg?branch=master["Build Status", link="https://travis-ci.org/JAVACAFE-STUDY/logjdbc"]
+
 == Overview
 
-완성된 형태의 SQL를 로깅을 도와주는 라이브러리입니다.
+SQL 로깅 라이브러리. JDBC에서 발생하는 로그를 파라미터와 바인딩하여 보여줍니다
+
+image::https://cloud.githubusercontent.com/assets/3116341/17138215/196a15f2-537a-11e6-8d93-1ee43498c23d.png[]
+
+== 버전
+
+JDK 1.7 이상
 
 == 상세
 
@@ -10,15 +20,14 @@ Database는 데이터가 최종적으로 저장되는 장소입니다. 그렇기
 
 로직이 정상적으로 수행되었는지를 가장 명쾌하게 알 수 있는 부분은 이 SQL문이 정상적으로 만들어졌는지를 확인해보는 일입니다.
 
-Java에서 로그로 발생되는 SQL문은 파라미터와 분리된채로 나오게 됩니다. select문이 길어질수록 이러한 매핑과정은 더욱 힘들곤 했었기 때문에 이 라이브러리를 제작하게 되었습니다.
+Java에서 로그로 발생되는 SQL문은 파라미터와 분리된채로 나오게 됩니다.
+select문이 길어질수록 이러한 단순 매핑 과정은 더욱 힘들곤 했었기 때문에 이 라이브러리를 제작하게 되었습니다.
 
-동일한 목적을 가진 라이브러리가 존재하지만 의존라이브러리 문제와 쉽지않은 설정때문에 불편하였습니다.
-
-여기에 더해서 SQL formatting등 개인적으로 필요했던 기능들을 직접 구현해보고자 프로젝트를 시작하게 되었습니다.
+기존 라이브러리 log4jdbc 및 p4sql의 경우, 개발이 중단된 상태이며, 여기에 더해 SQL formatting등 필요했던 기능들이 부족해 직접 프로젝트를 만들게 되었습니다.
 
 == 사용법
 
-`LoggableDataSource` 해당 클래스로 기존 `DataSource`객체를 추가하면 됩니다.
+`LoggableDataSource` 생성자로 기존 `DataSource` 객체를 추가하여 로깅을 설정할 수 있습니다.
 
 [source, java]
 ----
@@ -36,15 +45,5 @@ public DataSource simpleDataSource() {
     return dataSource;
 }
 ----
-
-== 작업상황
-
-* [x] 로그로 SQL및 파라미터를 출력할 수 있다.
-* [x] SQL을 formatting하여 읽기 좋은 형태로 출력할 수 있다.
-* [ ] 테스트 작성!
-* [ ] 다양한 벤더를 지원할 수 있도록 만든다.
-** 현재는 mySql, h2만 가능
-* [ ] ResultSet을 읽기좋은 형태로 출력할 수 있다.
-* [ ] SQL에 색상을넣어서 가독성을 높인다.
 
 
