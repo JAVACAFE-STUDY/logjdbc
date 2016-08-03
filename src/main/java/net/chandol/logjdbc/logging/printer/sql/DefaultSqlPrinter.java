@@ -19,7 +19,6 @@ public class DefaultSqlPrinter implements SqlPrinter {
         return defaultSqlPrinter;
     }
 
-    //
     private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.logjdbc.sql");
     private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.logjdbc.parameter");
 

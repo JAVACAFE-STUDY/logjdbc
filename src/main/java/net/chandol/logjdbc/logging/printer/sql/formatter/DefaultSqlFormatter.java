@@ -15,8 +15,16 @@ import java.util.*;
  * @author Steve Ebersole
  */
 public class DefaultSqlFormatter implements SqlFormatter {
-    public static final String WHITESPACE = " \n\r\f\t";
+    private static DefaultSqlFormatter instance;
 
+    public static DefaultSqlFormatter getInstance() {
+        if (instance == null)
+            instance = new DefaultSqlFormatter();
+
+        return instance;
+    }
+
+    private static final String WHITESPACE = " \n\r\f\t";
     private static final Set<String> BEGIN_CLAUSES = new HashSet<String>();
     private static final Set<String> END_CLAUSES = new HashSet<String>();
     private static final Set<String> LOGICAL = new HashSet<String>();
@@ -65,6 +73,7 @@ public class DefaultSqlFormatter implements SqlFormatter {
     private static final String INDENT_STRING = "    ";
     private static final String INITIAL = "\n    ";
 
+    private DefaultSqlFormatter() {}
 
     @Override
     public String format(String source) {

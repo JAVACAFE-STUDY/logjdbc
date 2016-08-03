@@ -35,8 +35,9 @@ public class ProxyResultSet implements ResultSet {
         try {
             boolean hasNext = _resultSet.next();
             // 다음 값이 있는 경우 현재 값들을 collector에 추가합니다.
-            if (hasNext)
+            if (hasNext) {
                 rsCollector.collectCurrentCursorResultSetData(this);
+            }
 
             return hasNext;
         } catch (SQLException e) {

@@ -18,24 +18,38 @@ public class LogJdbcConfig {
     private DatabaseType type;
     private ParameterConverter converter;
     private SqlFormatter formatter;
-
     private SqlPrinter sqlPrinter;
     private ResultSetPrinter resultSetPrinter;
 
-    // 각 항목들을 초기화시킨다.
-    public LogJdbcConfig(DatabaseType type, SqlFormatter formatter) {
+    public LogJdbcConfig(DatabaseType type) {
         this.type = type;
         this.converter = type.getParameterConverter();
-        this.formatter = formatter;
 
+        this.formatter = DefaultSqlFormatter.getInstance();
         this.sqlPrinter = DefaultSqlPrinter.getInstance();
         this.resultSetPrinter = ResultSetTablePrinter.getInstance();
     }
 
-    public LogJdbcConfig(DatabaseType type) {
-        this(type, new DefaultSqlFormatter());
+    void setType(DatabaseType type) {this.type = type;}
+
+    void setConverter(ParameterConverter converter) {
+        this.converter = converter;
     }
 
+    void setFormatter(SqlFormatter formatter) {
+        this.formatter = formatter;
+    }
+
+    void setSqlPrinter(SqlPrinter sqlPrinter) {
+        this.sqlPrinter = sqlPrinter;
+    }
+
+    void setResultSetPrinter(ResultSetPrinter resultSetPrinter) {
+        this.resultSetPrinter = resultSetPrinter;
+    }
+
+
+    /* getter */
     public DatabaseType getType() {
         return type;
     }
@@ -59,8 +73,6 @@ public class LogJdbcConfig {
 
     public static LogJdbcConfig autoconfig(DataSource datasource) {
         DatabaseType type = DatabaseType.find(datasource);
-        SqlFormatter formatter = new DefaultSqlFormatter();
-
-        return new LogJdbcConfig(type, formatter);
+        return new LogJdbcConfig(type);
     }
 }

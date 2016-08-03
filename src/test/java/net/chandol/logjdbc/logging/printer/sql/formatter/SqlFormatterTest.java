@@ -10,7 +10,7 @@ public class SqlFormatterTest {
     @Test
     public void testFormat() throws Exception {
         //given
-        SqlFormatter sqlFormatter = new DefaultSqlFormatter();
+        SqlFormatter sqlFormatter = DefaultSqlFormatter.getInstance();
         String sourceSql = "SELECT * FROM EMP WHERE DEPTNO = 10 AND NAME = '테스트';";
 
         //when
