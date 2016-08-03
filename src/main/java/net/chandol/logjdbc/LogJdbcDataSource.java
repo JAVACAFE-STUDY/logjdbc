@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-import static net.chandol.logjdbc.config.LogJdbcConfig.autoconfig;
-
 /**
  * 기존의 Datasource를 감싸주는 프록시로써의 역할을 한다.
  * 해당 프록시는 SQL문, parameter를 캐치하여 로그를 만들어준다.
@@ -22,6 +20,7 @@ public class LogJdbcDataSource implements DataSource {
 
     public LogJdbcDataSource(DataSource dataSource) {
         this._datasource = dataSource;
+        this.config = new LogJdbcConfig();
     }
 
     public LogJdbcDataSource(DataSource dataSource, LogJdbcConfig config) {
@@ -31,16 +30,16 @@ public class LogJdbcDataSource implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        if (configNotExist())
-            config = autoconfig(_datasource);
+        if (databaseTypeNotExist())
+            config.setDatabaseTypeBaseOnDatasource(_datasource);
 
         return new ProxyConnection(config, this._datasource.getConnection());
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        if (configNotExist())
-            config = autoconfig(_datasource);
+        if (databaseTypeNotExist())
+            config.setDatabaseTypeBaseOnDatasource(_datasource);
 
         return new ProxyConnection(config, this._datasource.getConnection(username, password));
     }
@@ -80,7 +79,7 @@ public class LogJdbcDataSource implements DataSource {
         return this._datasource.getParentLogger();
     }
 
-    private boolean configNotExist() {
-        return config == null;
+    private boolean databaseTypeNotExist() {
+        return config.getType() == null;
     }
 }

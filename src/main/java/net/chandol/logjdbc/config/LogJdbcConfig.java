@@ -10,6 +10,9 @@ import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter
 
 
 import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SQL로그 설정.
@@ -20,34 +23,30 @@ public class LogJdbcConfig {
     private SqlFormatter formatter;
     private SqlPrinter sqlPrinter;
     private ResultSetPrinter resultSetPrinter;
+    private Map<String, String> properties;
+
+    public LogJdbcConfig() {
+        // TODO 기본설정 작업할 것
+        this(new HashMap<String, String>());
+    }
 
     public LogJdbcConfig(DatabaseType type) {
-        this.type = type;
-        this.converter = type.getParameterConverter();
+        // TODO 기본설정 작업할 것
+        this(type, new HashMap<String, String>());
+    }
 
+    public LogJdbcConfig(Map<String, String> properties) {
         this.formatter = DefaultSqlFormatter.getInstance();
         this.sqlPrinter = DefaultSqlPrinter.getInstance();
         this.resultSetPrinter = ResultSetTablePrinter.getInstance();
+        this.properties = Collections.unmodifiableMap(properties);
     }
 
-    void setType(DatabaseType type) {this.type = type;}
-
-    void setConverter(ParameterConverter converter) {
-        this.converter = converter;
+    public LogJdbcConfig(DatabaseType type, Map<String, String> properties) {
+        this(properties);
+        this.type = type;
+        this.converter = type.getParameterConverter();
     }
-
-    void setFormatter(SqlFormatter formatter) {
-        this.formatter = formatter;
-    }
-
-    void setSqlPrinter(SqlPrinter sqlPrinter) {
-        this.sqlPrinter = sqlPrinter;
-    }
-
-    void setResultSetPrinter(ResultSetPrinter resultSetPrinter) {
-        this.resultSetPrinter = resultSetPrinter;
-    }
-
 
     /* getter */
     public DatabaseType getType() {
@@ -70,9 +69,19 @@ public class LogJdbcConfig {
         return resultSetPrinter;
     }
 
+    public String getProperty(String key){
+        return this.properties.get(key);
+    }
 
-    public static LogJdbcConfig autoconfig(DataSource datasource) {
+
+    /**
+     * Datasource를 분석하여 Database를 찾고 설정합니다.
+     * @param datasource
+     */
+    public void setDatabaseTypeBaseOnDatasource(DataSource datasource) {
         DatabaseType type = DatabaseType.find(datasource);
-        return new LogJdbcConfig(type);
+
+        this.type = type;
+        this.converter = type.getParameterConverter();
     }
 }
