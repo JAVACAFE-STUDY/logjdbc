@@ -28,9 +28,8 @@ public class LogJdbcConfig {
         this.converter = type.getParameterConverter();
         this.formatter = formatter;
 
-        //TODO need singleton
-        this.sqlPrinter = new DefaultSqlPrinter();
-        this.resultSetPrinter = new ResultSetTablePrinter();
+        this.sqlPrinter = DefaultSqlPrinter.getInstance();
+        this.resultSetPrinter = ResultSetTablePrinter.getInstance();
     }
 
     public LogJdbcConfig(DatabaseType type) {
