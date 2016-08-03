@@ -6,7 +6,7 @@
 
     <groupId>net.chandol</groupId>
     <artifactId>logjdbc</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logging library for SQL and resultSet</description>
@@ -59,6 +59,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.13</version>
+            <scope>test</scope>
         </dependency>
         <!-- // 로깅설정 -->
 
