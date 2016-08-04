@@ -15,11 +15,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-
 public class LogContextTest extends AutoLogInitializer {
-    LogJdbcConfig config;
+    private LogJdbcConfig config;
     private String sourceSql;
-    private List<LoggingEvent> recentLogs;
 
     @Before
     public void setup() {
@@ -74,7 +72,7 @@ public class LogContextTest extends AutoLogInitializer {
 
         //then
         assertThat(getLogSize(), is(2));
-        recentLogs = AutoLogInitializer.getRecentLogs(2);
+        List<LoggingEvent> recentLogs = AutoLogInitializer.getRecentLogs(2);
         String paramMessage = recentLogs.get(0).getMessage();
         assertThat(paramMessage, is(containsString("{String = '테스트'}")));
 

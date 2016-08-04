@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * SQL로그 설정.
+ * LogJdbc 설정
  */
 public class LogJdbcConfig {
     private DatabaseType type;
@@ -23,6 +23,8 @@ public class LogJdbcConfig {
     private SqlFormatter formatter;
     private SqlPrinter sqlPrinter;
     private ResultSetPrinter resultSetPrinter;
+
+    // 로깅에 필요한 설정값을 담을 수 있다.
     private Map<String, String> properties;
 
     public LogJdbcConfig() {
