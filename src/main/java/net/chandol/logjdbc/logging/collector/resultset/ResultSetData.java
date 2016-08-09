@@ -21,8 +21,12 @@ public class ResultSetData {
     // 우선은 ToString을 사용한다.
     void addRow(Object... values) {
         String[] newValues = new String[values.length];
-        for (int idx = 0; idx < values.length; idx++)
-            newValues[idx] = values[idx].toString();
+        for (int idx = 0; idx < values.length; idx++){
+            if(values[idx] != null)
+                newValues[idx] = values[idx].toString();
+            else
+                newValues[idx] = "<null>";
+        }
 
         datas.add(newValues);
     }
