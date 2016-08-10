@@ -2,7 +2,7 @@ package net.chandol.logjdbc;
 
 
 import ch.qos.logback.classic.spi.LoggingEvent;
-import net.chandol.logjdbc._testhelper.AutoLogInitializer;
+import net.chandol.logjdbc._testhelper.LogReadableTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
 
-public class LogJdbcDataSourceIntegrationTest extends AutoLogInitializer {
+public class LogJdbcDataSourceIntegrationTest extends LogReadableTestBase {
 
     @Test
     public void coreIntegrationTest() throws SQLException {

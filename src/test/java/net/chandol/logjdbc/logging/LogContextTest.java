@@ -1,7 +1,7 @@
 package net.chandol.logjdbc.logging;
 
 import ch.qos.logback.classic.spi.LoggingEvent;
-import net.chandol.logjdbc._testhelper.AutoLogInitializer;
+import net.chandol.logjdbc._testhelper.LogReadableTestBase;
 import net.chandol.logjdbc.config.LogJdbcConfig;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterType;
@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LogContextTest extends AutoLogInitializer {
+public class LogContextTest extends LogReadableTestBase {
     private LogJdbcConfig config;
     private String sourceSql;
 
@@ -72,7 +72,7 @@ public class LogContextTest extends AutoLogInitializer {
 
         //then
         assertThat(getLogSize(), is(2));
-        List<LoggingEvent> recentLogs = AutoLogInitializer.getRecentLogs(2);
+        List<LoggingEvent> recentLogs = LogReadableTestBase.getRecentLogs(2);
         String paramMessage = recentLogs.get(0).getMessage();
         assertThat(paramMessage, is(containsString("{String = '테스트'}")));
 

@@ -7,9 +7,6 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by sejong on 2016. 7. 30..
- */
 public class BaseParameterConverterTest {
     @Test
     public void convert() throws Exception {

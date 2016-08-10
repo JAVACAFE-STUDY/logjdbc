@@ -1,13 +1,12 @@
 package net.chandol.logjdbc.config;
 
-import net.chandol.logjdbc.logging.printer.resultset.ResultSetTablePrinter;
 import net.chandol.logjdbc.logging.printer.resultset.ResultSetPrinter;
+import net.chandol.logjdbc.logging.printer.resultset.ResultSetTablePrinter;
 import net.chandol.logjdbc.logging.printer.sql.DefaultSqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.SqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.formatter.DefaultSqlFormatter;
 import net.chandol.logjdbc.logging.printer.sql.formatter.SqlFormatter;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
-
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -65,12 +64,26 @@ public class LogJdbcConfig {
         return formatter;
     }
 
-    public SqlPrinter getSqlPrinter(){
+    public SqlPrinter getSqlPrinter() {
         return sqlPrinter;
     }
 
-    public ResultSetPrinter getResultSetPrinter(){
+    public ResultSetPrinter getResultSetPrinter() {
         return resultSetPrinter;
+    }
+
+    public boolean getBooleanProperty(String key) {
+        String value = getProperty(key);
+        if (value.equalsIgnoreCase("true"))
+            return true;
+        else if (value.equalsIgnoreCase("false"))
+            return false;
+        else
+            throw new IllegalArgumentException("cannot convert to boolean : " + value);
+    }
+
+    public int getIntegerProperty(String key){
+        return Integer.valueOf(getProperty(key));
     }
 
     public String getProperty(String key){
@@ -80,6 +93,7 @@ public class LogJdbcConfig {
 
     /**
      * Datasource를 분석하여 Database를 찾고 설정합니다.
+     *
      * @param datasource
      */
     public void setDatabaseTypeBaseOnDatasource(DataSource datasource) {
