@@ -41,7 +41,9 @@ public class LogJdbcConfig {
         this.formatter = DefaultSqlFormatter.getInstance();
         this.sqlPrinter = DefaultSqlPrinter.getInstance();
         this.resultSetPrinter = ResultSetTablePrinter.getInstance();
-        this.properties = Collections.unmodifiableMap(properties);
+        this.properties = Collections.unmodifiableMap(
+                combinePropertiesMap(properties)
+        );
     }
 
     public LogJdbcConfig(DatabaseType type, Map<String, String> properties) {
@@ -85,5 +87,13 @@ public class LogJdbcConfig {
 
         this.type = type;
         this.converter = type.getParameterConverter();
+    }
+
+
+    private static HashMap<String, String> combinePropertiesMap(Map<String, String> properties) {
+        HashMap<String, String> propertiesMap = new HashMap<>();
+        propertiesMap.putAll(LogJdbcConfigDefaultProperties.getDefaultPropertiesMap());
+        propertiesMap.putAll(properties);
+        return propertiesMap;
     }
 }
