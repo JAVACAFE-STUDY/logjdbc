@@ -6,7 +6,7 @@
 
     <groupId>net.chandol</groupId>
     <artifactId>logjdbc</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logging library for SQL and resultSet</description>
@@ -166,9 +166,9 @@
                 </executions>
 
                 <!-- maven 배포시 아래 구문 주석처리 -->
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <!--<configuration>-->
+                    <!--<skip>true</skip>-->
+                <!--</configuration>-->
             </plugin>
 
             <plugin>
