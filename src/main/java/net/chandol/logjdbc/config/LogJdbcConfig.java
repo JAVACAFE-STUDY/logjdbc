@@ -1,13 +1,12 @@
 package net.chandol.logjdbc.config;
 
-import net.chandol.logjdbc.logging.printer.resultset.ResultSetTablePrinter;
 import net.chandol.logjdbc.logging.printer.resultset.ResultSetPrinter;
+import net.chandol.logjdbc.logging.printer.resultset.ResultSetTablePrinter;
 import net.chandol.logjdbc.logging.printer.sql.DefaultSqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.SqlPrinter;
 import net.chandol.logjdbc.logging.printer.sql.formatter.DefaultSqlFormatter;
 import net.chandol.logjdbc.logging.printer.sql.formatter.SqlFormatter;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
-
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -41,7 +40,9 @@ public class LogJdbcConfig {
         this.formatter = DefaultSqlFormatter.getInstance();
         this.sqlPrinter = DefaultSqlPrinter.getInstance();
         this.resultSetPrinter = ResultSetTablePrinter.getInstance();
-        this.properties = Collections.unmodifiableMap(properties);
+        this.properties = Collections.unmodifiableMap(
+                combinePropertiesMap(properties)
+        );
     }
 
     public LogJdbcConfig(DatabaseType type, Map<String, String> properties) {
@@ -63,12 +64,26 @@ public class LogJdbcConfig {
         return formatter;
     }
 
-    public SqlPrinter getSqlPrinter(){
+    public SqlPrinter getSqlPrinter() {
         return sqlPrinter;
     }
 
-    public ResultSetPrinter getResultSetPrinter(){
+    public ResultSetPrinter getResultSetPrinter() {
         return resultSetPrinter;
+    }
+
+    public boolean getBooleanProperty(String key) {
+        String value = getProperty(key);
+        if (value.equalsIgnoreCase("true"))
+            return true;
+        else if (value.equalsIgnoreCase("false"))
+            return false;
+        else
+            throw new IllegalArgumentException("cannot convert to boolean : " + value);
+    }
+
+    public int getIntProperty(String key){
+        return Integer.valueOf(getProperty(key));
     }
 
     public String getProperty(String key){
@@ -78,6 +93,7 @@ public class LogJdbcConfig {
 
     /**
      * Datasource를 분석하여 Database를 찾고 설정합니다.
+     *
      * @param datasource
      */
     public void setDatabaseTypeBaseOnDatasource(DataSource datasource) {
@@ -85,5 +101,13 @@ public class LogJdbcConfig {
 
         this.type = type;
         this.converter = type.getParameterConverter();
+    }
+
+
+    private static HashMap<String, String> combinePropertiesMap(Map<String, String> properties) {
+        HashMap<String, String> propertiesMap = new HashMap<>();
+        propertiesMap.putAll(LogJdbcConfigDefaultProperties.getDefaultPropertiesMap());
+        propertiesMap.putAll(properties);
+        return propertiesMap;
     }
 }

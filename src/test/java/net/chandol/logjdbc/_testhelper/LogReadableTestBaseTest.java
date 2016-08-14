@@ -8,8 +8,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 // 로그가 정상적으로 초기화되는지를 확인합니다.
-public class AutoLogInitializerTest extends AutoLogInitializer{
-    private static final Logger logger = LoggerFactory.getLogger(AutoLogInitializerTest.class);
+public class LogReadableTestBaseTest extends LogReadableTestBase {
+    private static final Logger logger = LoggerFactory.getLogger(LogReadableTestBaseTest.class);
 
     @Test
     public void getLogTest(){

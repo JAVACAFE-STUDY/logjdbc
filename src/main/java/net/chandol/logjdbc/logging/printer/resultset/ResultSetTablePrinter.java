@@ -34,10 +34,19 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
 
     @Override
     public void logResultSet(LogJdbcConfig config, ResultSetCollector collector) {
-        ResultSetData resultSetData = collector.getResultSetData();
+        ResultSetData data = collector.getResultSetData();
 
-        List<String> columns = resultSetData.getColumns();
-        List<String[]> rowValues = resultSetData.getDatas();
+        int resultSetMaxLength = config.getIntProperty("resultset.maxlength");
+        int printResultSetSize = Math.min(resultSetMaxLength, data.getRowsSize());
+
+        String resultSetTable = getResultSetTable(data, printResultSetSize);
+
+        rsLogger.debug("\n" + resultSetTable);
+    }
+
+    String getResultSetTable(ResultSetData data, int printResultSetSize) {
+        List<String> columns = data.getColumns();
+        List<String[]> rowValues = data.getRows();
 
         V2_AsciiTable table = new V2_AsciiTable();
 
@@ -45,11 +54,10 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
         table.addRow(columns.toArray());
         table.addStrongRule();
 
-        for (String[] values : rowValues)
-            table.addRow(values);
+        for (int idx = 0; idx < printResultSetSize; idx++)
+            table.addRow((Object[]) rowValues.get(idx));
 
         table.addRule();
-
-        rsLogger.debug("\n" + renderer.render(table).toString());
+        return renderer.render(table).toString();
     }
 }
