@@ -10,6 +10,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class DefaultSqlPrinter implements SqlPrinter {
+    /* logger */
+    private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.logjdbc.sql");
+    private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.logjdbc.parameter");
+
+    /* singleton */
     private static DefaultSqlPrinter defaultSqlPrinter;
 
     public static DefaultSqlPrinter getInstance() {
@@ -19,14 +24,14 @@ public class DefaultSqlPrinter implements SqlPrinter {
         return defaultSqlPrinter;
     }
 
-    private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.logjdbc.sql");
-    private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.logjdbc.parameter");
-
     private DefaultSqlPrinter() {
     }
 
     @Override
-    public void logSql(LogJdbcConfig config, String templateSql, ParameterCollector parameterCollector) {
+    public void logSql(LogJdbcConfig config,
+                       String templateSql,
+                       ParameterCollector parameterCollector) {
+
         ParameterConverter converter = config.getConverter();
         List<Parameter> params = parameterCollector.getAll();
         List<String> convertedParams = converter.convert(params);
@@ -36,8 +41,8 @@ public class DefaultSqlPrinter implements SqlPrinter {
 
         // SQL with formatter
         // FIXME 이부분은 정리 및 중복제거 필요
-        String sql = SqlParmeterBinder.bind(templateSql, convertedParams);
-        if (isFormattable(config, sql))
+        String sql = SqlParameterBinder.bind(templateSql, convertedParams);
+        if (checkFormattable(config, sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
@@ -49,7 +54,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
     public void logSql(LogJdbcConfig config, String sql) {
         //SQL Formatting
         // FIXME 이부분은 정리 및 중복제거 필요
-        if (isFormattable(config, sql))
+        if (checkFormattable(config, sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
@@ -57,7 +62,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
         sqlLogger.debug(sql);
     }
 
-    // 파라미터가 모호함... 리팩토링 필요!!
+    // FIXME 파라미터가 모호함... 리팩토링 필요!!
     static String parameterToLog(List<Parameter> params, List<String> convertedParams) {
         StringBuilder builder = new StringBuilder();
         builder.append("\nparameters : [");
@@ -75,7 +80,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
         return builder.toString();
     }
 
-    private static class SqlParmeterBinder {
+    private static class SqlParameterBinder {
         static String bind(String templateSql, List<String> params) {
             // TODO 성능 개선필요
             for (String param : params)
@@ -85,8 +90,8 @@ public class DefaultSqlPrinter implements SqlPrinter {
         }
     }
 
-
-    private static boolean isFormattable(LogJdbcConfig config, String sql) {
+    // FIXME Properties 설정은 고민 필요!
+    private static boolean checkFormattable(LogJdbcConfig config, String sql) {
         boolean isFormatActive = config.getBooleanProperty("sql.auto.format.active");
         boolean isIgnoreFormattedSql = config.getBooleanProperty("sql.auto.format.ignore-formatted");
 
