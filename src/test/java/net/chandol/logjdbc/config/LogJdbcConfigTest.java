@@ -21,7 +21,7 @@ public class LogJdbcConfigTest {
         assertThat(config.getBooleanProperty("sql.trim.extra-linebreaks"), is(true));
         assertThat(config.getBooleanProperty("sql.auto.format.active"), is(true));
         assertThat(config.getBooleanProperty("sql.auto.format.ignore-formatted"), is(true));
-        assertThat(config.getIntegerProperty("resultset.maxlength"), is(10));
+        assertThat(config.getIntProperty("resultset.maxlength"), is(10));
     }
 
     @Test

@@ -82,7 +82,7 @@ public class LogJdbcConfig {
             throw new IllegalArgumentException("cannot convert to boolean : " + value);
     }
 
-    public int getIntegerProperty(String key){
+    public int getIntProperty(String key){
         return Integer.valueOf(getProperty(key));
     }
 

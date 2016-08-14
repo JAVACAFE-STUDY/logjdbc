@@ -42,12 +42,24 @@ public class DefaultSqlPrinter implements SqlPrinter {
         // SQL with formatter
         // FIXME 이부분은 정리 및 중복제거 필요
         String sql = SqlParameterBinder.bind(templateSql, convertedParams);
+
         if (checkFormattable(config, sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
 
+
+        // FIXME 아래 부분은 필터 형태로 변경하자.
+        if(config.getBooleanProperty("sql.trim.extra-linebreaks")){
+            sql = removeExtraLineBreak(sql);
+        }
+
         sqlLogger.debug(sql);
+    }
+
+    String removeExtraLineBreak(String sql) {
+        sql = sql.replaceAll("(\n){2,}", "\n");
+        return sql;
     }
 
     @Override

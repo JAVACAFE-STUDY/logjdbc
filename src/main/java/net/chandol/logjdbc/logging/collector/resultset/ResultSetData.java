@@ -10,11 +10,11 @@ public class ResultSetData {
     private List<Column> columns;
     // list로 row를 표현 array로는 데이터를 표현
     // column의 크기는 고정되어있음. 어차피 log로 표현.String으로 써도 문제없음.
-    private List<String[]> datas;
+    private List<String[]> rows;
 
     ResultSetData(ResultSetMetaData metaData) {
         this.columns = createColumns(metaData);
-        this.datas = new ArrayList<>();
+        this.rows = new ArrayList<>();
     }
 
     // TODO ColumnType별로 문자열로 변경하여 저장한다.
@@ -28,7 +28,7 @@ public class ResultSetData {
                 newValues[idx] = "<null>";
         }
 
-        datas.add(newValues);
+        rows.add(newValues);
     }
 
     public List<String> getColumns() {
@@ -39,7 +39,11 @@ public class ResultSetData {
         return columnLabels;
     }
 
-    public List<String[]> getDatas() {
-        return datas;
+    public int getRowsSize(){
+        return rows.size();
+    }
+
+    public List<String[]> getRows() {
+        return rows;
     }
 }

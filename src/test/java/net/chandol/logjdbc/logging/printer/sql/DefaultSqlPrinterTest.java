@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class DefaultSqlPrinterTest extends LogReadableTestBase {
@@ -54,6 +55,19 @@ public class DefaultSqlPrinterTest extends LogReadableTestBase {
         //then
         String formattedSql = getLogMessages().get(0);
         assertThat(formattedSql, containsString("SELECT * FROM DUAL"));
+    }
+
+    @Test
+    public void 여러줄의개행은_하나로_변경(){
+        //given
+        DefaultSqlPrinter printer = DefaultSqlPrinter.getInstance();
+        String source = "\n\n\n\n안녕\n반갑습니다.\n\n\n\n\n\n개행치환하기";
+
+        //when
+        String result = printer.removeExtraLineBreak(source);
+
+        //then
+        assertThat(result, is("\n안녕\n반갑습니다.\n개행치환하기"));
     }
 
 }
