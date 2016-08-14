@@ -26,6 +26,8 @@ public class ResultSetCollectorTest {
 
         connection = dataSource.getConnection();
         Statement statement = connection.createStatement();
+        // FIXME 테이블을 만드는 과정이 진행됨. 회귀테스트 불가능한부분
+        // 테스트 종료후 테이블을 삭제하는 로직 필요
         statement.execute("CREATE TABLE EMPLOYEE (ID INT NOT NULL, NAME VARCHAR (20) NOT NULL, AGE INT NOT NULL, ADDRESS CHAR (25), PRIMARY KEY (ID));");
         statement.execute("INSERT INTO EMPLOYEE (ID, NAME, AGE, ADDRESS) VALUES (2, 'Khilan', 25, 'Delhi' );");
         statement.execute("INSERT INTO EMPLOYEE (ID, NAME, AGE, ADDRESS) VALUES (3, 'kaushik', 23, 'Kota' );");
