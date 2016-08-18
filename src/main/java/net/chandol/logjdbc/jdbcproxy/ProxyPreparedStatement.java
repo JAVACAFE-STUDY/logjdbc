@@ -218,6 +218,7 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
     }
 
     @Override
+    @Deprecated
     public void setUnicodeStream(int index, InputStream x, int length) throws SQLException {
         try {
             _pstmt.setUnicodeStream(index, x, length);
