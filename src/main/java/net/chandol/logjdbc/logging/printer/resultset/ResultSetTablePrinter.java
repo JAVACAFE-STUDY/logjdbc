@@ -36,7 +36,7 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
     public void logResultSet(LogJdbcConfig config, ResultSetCollector collector) {
         ResultSetData data = collector.getResultSetData();
 
-        int resultSetMaxLength = config.getIntProperty("resultset.maxlength");
+        int resultSetMaxLength = config.getProperties().getResultsetMaxlength();
         int printResultSetSize = Math.min(resultSetMaxLength, data.getRowsSize());
 
         String resultSetTable = getResultSetTable(data, printResultSetSize);

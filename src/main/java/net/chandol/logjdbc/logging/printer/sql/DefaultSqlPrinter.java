@@ -1,6 +1,7 @@
 package net.chandol.logjdbc.logging.printer.sql;
 
 import net.chandol.logjdbc.config.LogJdbcConfig;
+import net.chandol.logjdbc.config.LogJdbcProperties;
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
@@ -43,14 +44,14 @@ public class DefaultSqlPrinter implements SqlPrinter {
         // FIXME 이부분은 정리 및 중복제거 필요
         String sql = SqlParameterBinder.bind(templateSql, convertedParams);
 
-        if (checkFormattable(config, sql))
+        if (checkFormattable(config.getProperties(), sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
 
 
         // FIXME 아래 부분은 필터 형태로 변경하자.
-        if(config.getBooleanProperty("sql.trim.extra-linebreaks")){
+        if(config.getProperties().getSqlTrimExtraLinebreak()){
             sql = removeExtraLineBreak(sql);
         }
 
@@ -66,7 +67,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
     public void logSql(LogJdbcConfig config, String sql) {
         //SQL Formatting
         // FIXME 이부분은 정리 및 중복제거 필요
-        if (checkFormattable(config, sql))
+        if (checkFormattable(config.getProperties(), sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
@@ -103,9 +104,9 @@ public class DefaultSqlPrinter implements SqlPrinter {
     }
 
     // FIXME Properties 설정은 고민 필요!
-    private static boolean checkFormattable(LogJdbcConfig config, String sql) {
-        boolean isFormatActive = config.getBooleanProperty("sql.auto.format.active");
-        boolean isIgnoreFormattedSql = config.getBooleanProperty("sql.auto.format.ignore-formatted");
+    private static boolean checkFormattable(LogJdbcProperties prop, String sql) {
+        boolean isFormatActive = prop.getSqlAutoFormatActive();
+        boolean isIgnoreFormattedSql = prop.getSqlAutoFormatSkipFormattedSql();
 
         if (isFormatActive)
             return not(isIgnoreFormattedSql && isFormattedSql(sql));

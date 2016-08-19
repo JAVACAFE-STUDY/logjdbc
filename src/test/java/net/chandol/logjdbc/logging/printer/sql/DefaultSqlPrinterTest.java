@@ -2,10 +2,8 @@ package net.chandol.logjdbc.logging.printer.sql;
 
 import net.chandol.logjdbc._testhelper.LogReadableTestBase;
 import net.chandol.logjdbc.config.LogJdbcConfig;
+import net.chandol.logjdbc.config.LogJdbcProperties;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -44,10 +42,10 @@ public class DefaultSqlPrinterTest extends LogReadableTestBase {
     public void format기능은Properties로끌수있다() throws Exception {
         //given
         DefaultSqlPrinter sqlPrinter = DefaultSqlPrinter.getInstance();
-        Map<String, String> propMap = new HashMap<String, String>(){{
-            put("sql.auto.format.active", "false");
-        }};
-        LogJdbcConfig config = new LogJdbcConfig(propMap);
+        LogJdbcProperties prop = new LogJdbcProperties();
+        prop.setSqlAutoFormatActive(false);
+
+        LogJdbcConfig config = new LogJdbcConfig(prop);
 
         //when
         sqlPrinter.logSql(config, "SELECT * FROM DUAL");
