@@ -3,7 +3,6 @@ package net.chandol.logjdbc.logging;
 import net.chandol.logjdbc.config.LogJdbcConfig;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.collector.resultset.ResultSetCollector;
-import net.chandol.logjdbc.logging.printer.LogPrinter;
 
 import java.sql.ResultSetMetaData;
 
@@ -12,21 +11,20 @@ import java.sql.ResultSetMetaData;
  */
 public class LogContext {
     private LogJdbcConfig config;
+
     private String sql;
-    private ResultSetCollector resultSetCollector;
     private ParameterCollector parameterCollector;
+    private ResultSetCollector resultSetCollector;
 
-    // TODO 리팩토링
     public void printLog() {
-        // parameter가 없는 경우
-        if (parameterCollector != null){
-            LogPrinter.logSql(config, sql, parameterCollector);
-        } else{
-            if(isSqlExist()) LogPrinter.logSql(config, sql);
-        }
+        if(parameterPrintable())
+            config.getSqlPrinter().printParameter(this);
 
-        if(resultSetCollector!=null)
-            LogPrinter.logResultSet(config, resultSetCollector);
+        if (sqlPrintable())
+            config.getSqlPrinter().printSql(this);
+
+        if (resultSetPrintable())
+            config.getResultSetPrinter().printResultSet(this);
     }
 
     public void setSql(String sql) {
@@ -43,8 +41,33 @@ public class LogContext {
         return this.resultSetCollector;
     }
 
-    private boolean isSqlExist() {
-        return sql!=null && !sql.isEmpty();
+    private boolean resultSetPrintable() {
+        return resultSetCollector != null;
+    }
+
+    private boolean parameterPrintable() {
+        return parameterCollector != null;
+    }
+
+    private boolean sqlPrintable() {
+        return sql != null && !sql.isEmpty();
+    }
+
+    /*getter*/
+    public LogJdbcConfig getConfig() {
+        return config;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public ParameterCollector getParameterCollector() {
+        return parameterCollector;
+    }
+
+    public ResultSetCollector getResultSetCollector() {
+        return resultSetCollector;
     }
 
     /* Constructor */

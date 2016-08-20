@@ -2,6 +2,7 @@ package net.chandol.logjdbc.logging.printer.sql;
 
 import net.chandol.logjdbc.config.LogJdbcConfig;
 import net.chandol.logjdbc.config.LogJdbcProperties;
+import net.chandol.logjdbc.logging.LogContext;
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
@@ -29,29 +30,39 @@ public class DefaultSqlPrinter implements SqlPrinter {
     }
 
     @Override
-    public void logSql(LogJdbcConfig config,
-                       String templateSql,
-                       ParameterCollector parameterCollector) {
+    public void printParameter(LogContext context) {
+        ParameterCollector collector = context.getParameterCollector();
+        ParameterConverter converter = context.getConfig().getConverter();
 
-        ParameterConverter converter = config.getConverter();
-        List<Parameter> params = parameterCollector.getAll();
+        List<Parameter> params = collector.getAll();
         List<String> convertedParams = converter.convert(params);
 
         // Parameter
         paramLogger.debug(parameterToLog(params, convertedParams));
+    }
 
-        // SQL with formatter
-        // FIXME 이부분은 정리 및 중복제거 필요
-        String sql = SqlParameterBinder.bind(templateSql, convertedParams);
+    @Override
+    public void printSql(LogContext context) {
+        LogJdbcConfig config = context.getConfig();
+        String sql = context.getSql();
 
+        if (context.getParameterCollector() != null) {
+            ParameterCollector collector = context.getParameterCollector();
+            ParameterConverter converter = config.getConverter();
+
+            List<Parameter> params = collector.getAll();
+            List<String> convertedParams = converter.convert(params);
+
+            sql = SqlParameterBinder.bind(sql, convertedParams);
+        }
+
+        // FIXME 아래 부분은 필터 형태로 변경하자.
         if (checkFormattable(config.getProperties(), sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
 
-
-        // FIXME 아래 부분은 필터 형태로 변경하자.
-        if(config.getProperties().getSqlTrimExtraLinebreak()){
+        if (config.getProperties().getSqlTrimExtraLinebreak()) {
             sql = removeExtraLineBreak(sql);
         }
 
@@ -61,18 +72,6 @@ public class DefaultSqlPrinter implements SqlPrinter {
     String removeExtraLineBreak(String sql) {
         sql = sql.replaceAll("(\n){2,}", "\n");
         return sql;
-    }
-
-    @Override
-    public void logSql(LogJdbcConfig config, String sql) {
-        //SQL Formatting
-        // FIXME 이부분은 정리 및 중복제거 필요
-        if (checkFormattable(config.getProperties(), sql))
-            sql = config.getFormatter().format(sql);
-        else
-            sql = "\n" + sql;
-
-        sqlLogger.debug(sql);
     }
 
     // FIXME 파라미터가 모호함... 리팩토링 필요!!

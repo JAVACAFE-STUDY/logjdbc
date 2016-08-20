@@ -5,7 +5,7 @@ import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
 import de.vandermeer.asciitable.v2.render.WidthLongestLine;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import net.chandol.logjdbc.config.LogJdbcConfig;
-import net.chandol.logjdbc.logging.collector.resultset.ResultSetCollector;
+import net.chandol.logjdbc.logging.LogContext;
 import net.chandol.logjdbc.logging.collector.resultset.ResultSetData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,9 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
     }
 
     @Override
-    public void logResultSet(LogJdbcConfig config, ResultSetCollector collector) {
-        ResultSetData data = collector.getResultSetData();
+    public void printResultSet(LogContext context) {
+        LogJdbcConfig config = context.getConfig();
+        ResultSetData data = context.getResultSetCollector().getResultSetData();
 
         int resultSetMaxLength = config.getProperties().getResultsetMaxlength();
         int printResultSetSize = Math.min(resultSetMaxLength, data.getRowsSize());
