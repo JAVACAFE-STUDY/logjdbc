@@ -166,9 +166,9 @@
                 </executions>
 
                 <!-- maven 배포시 아래 구문 주석처리 -->
-                <!--<configuration>-->
-                    <!--<skip>true</skip>-->
-                <!--</configuration>-->
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
 
             <plugin>
