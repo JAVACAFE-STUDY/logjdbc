@@ -10,6 +10,7 @@ public class LogJdbcProperties {
     public static final String SQL_AUTO_FORMAT_ACTIVE = "sql.auto.format.active";
     public static final String SQL_AUTO_FORMAT_SKIP_FORMATTED_SQL = "sql.auto.format.skip-formatted";
     public static final String RESULTSET_MAXLENGTH = "resultset.maxlength";
+    public static final String LOGGER_BASE_PATH = "logger.base.path";
 
     private Map<String, String> properties;
 
@@ -19,6 +20,7 @@ public class LogJdbcProperties {
         setSqlAutoFormatActive(true);
         setSqlAutoFormatSkipFormattedSql(true);
         setResultsetMaxlength(10);
+        setLoggerBasePath("net.chandol");
     }
 
     public void setSqlTrimExtraLinebreak(boolean value) {setProperty(SQL_TRIM_EXTRA_LINEBREAK, value);}
@@ -39,6 +41,8 @@ public class LogJdbcProperties {
     public void setResultsetMaxlength(int value){setProperty(RESULTSET_MAXLENGTH, value);}
     public int getResultsetMaxlength() {return getPropertyAsInteger(RESULTSET_MAXLENGTH);}
 
+    public void setLoggerBasePath(String basePath){setProperty(LOGGER_BASE_PATH, basePath);}
+    public String getLoggerBasePath() {return getProperty(LOGGER_BASE_PATH);}
 
     /* Properties 범용 메서드들 */
     public boolean isExist(String key) {

@@ -7,15 +7,10 @@ import net.chandol.logjdbc.logging.collector.parameter.Parameter;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class DefaultSqlPrinter implements SqlPrinter {
-    /* logger */
-    private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.logjdbc.sql");
-    private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.logjdbc.parameter");
-
     /* singleton */
     private static DefaultSqlPrinter defaultSqlPrinter;
 
@@ -38,7 +33,9 @@ public class DefaultSqlPrinter implements SqlPrinter {
         List<String> convertedParams = converter.convert(params);
 
         // Parameter
-        paramLogger.debug(parameterToLog(params, convertedParams));
+        getLogger(context, "parameter").debug(
+                parameterToLog(params, convertedParams)
+        );
     }
 
     @Override
@@ -66,7 +63,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
             sql = removeExtraLineBreak(sql);
         }
 
-        sqlLogger.debug(sql);
+        getLogger(context, "sql").debug(sql);
     }
 
     String removeExtraLineBreak(String sql) {
@@ -77,7 +74,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
     // FIXME 파라미터가 모호함... 리팩토링 필요!!
     static String parameterToLog(List<Parameter> params, List<String> convertedParams) {
         StringBuilder builder = new StringBuilder();
-        builder.append("\nparameters : [");
+        builder.append("\n    parameters : [");
         for (int idx = 0; idx < params.size(); idx++) {
             String type = params.get(idx).getType().getTypeAsStr();
             String value = convertedParams.get(idx);
@@ -111,6 +108,10 @@ public class DefaultSqlPrinter implements SqlPrinter {
             return not(isIgnoreFormattedSql && isFormattedSql(sql));
         else
             return false;
+    }
+
+    private static Logger getLogger(LogContext context, String parameter) {
+        return context.getHelper().getLogger(parameter);
     }
 
     private static boolean isFormattedSql(String sql) {

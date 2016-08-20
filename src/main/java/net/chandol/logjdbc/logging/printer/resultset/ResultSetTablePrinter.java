@@ -7,8 +7,6 @@ import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import net.chandol.logjdbc.config.LogJdbcConfig;
 import net.chandol.logjdbc.logging.LogContext;
 import net.chandol.logjdbc.logging.collector.resultset.ResultSetData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
         return instance;
     }
 
-    private static final Logger rsLogger = LoggerFactory.getLogger("net.chandol.logjdbc.resultset");
     private V2_AsciiTableRenderer renderer;
 
     private ResultSetTablePrinter() {
@@ -30,6 +27,7 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
 
         renderer.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
         renderer.setWidth(new WidthLongestLine());
+
     }
 
     @Override
@@ -42,7 +40,7 @@ public class ResultSetTablePrinter implements ResultSetPrinter {
 
         String resultSetTable = getResultSetTable(data, printResultSetSize);
 
-        rsLogger.debug("\n" + resultSetTable);
+        context.getHelper().getLogger("resultset").debug("\n" + resultSetTable);
     }
 
     String getResultSetTable(ResultSetData data, int printResultSetSize) {

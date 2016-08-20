@@ -16,8 +16,10 @@ public class LogContext {
     private ParameterCollector parameterCollector;
     private ResultSetCollector resultSetCollector;
 
+    private PrintLogHelper helper;
+
     public void printLog() {
-        if(parameterPrintable())
+        if (parameterPrintable())
             config.getSqlPrinter().printParameter(this);
 
         if (sqlPrintable())
@@ -41,19 +43,7 @@ public class LogContext {
         return this.resultSetCollector;
     }
 
-    private boolean resultSetPrintable() {
-        return resultSetCollector != null;
-    }
-
-    private boolean parameterPrintable() {
-        return parameterCollector != null;
-    }
-
-    private boolean sqlPrintable() {
-        return sql != null && !sql.isEmpty();
-    }
-
-    /*getter*/
+    /* getter */
     public LogJdbcConfig getConfig() {
         return config;
     }
@@ -70,13 +60,31 @@ public class LogContext {
         return resultSetCollector;
     }
 
+    public PrintLogHelper getHelper() {
+        return helper;
+    }
+
+    /* printable */
+    private boolean resultSetPrintable() {
+        return resultSetCollector != null;
+    }
+
+    private boolean parameterPrintable() {
+        return parameterCollector != null;
+    }
+
+    private boolean sqlPrintable() {
+        return sql != null && !sql.isEmpty();
+    }
+
     /* Constructor */
     private LogContext(LogJdbcConfig config) {
         this.config = config;
+        this.helper = new PrintLogHelper(config);
     }
 
     private LogContext(LogJdbcConfig config, String sql) {
-        this.config = config;
+        this(config);
         this.sql = sql;
     }
 
