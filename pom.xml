@@ -41,13 +41,6 @@
 
     <dependencies>
 
-        <!-- ResultSet을 테이블 형식으로 반환 -->
-        <dependency>
-            <groupId>de.vandermeer</groupId>
-            <artifactId>asciitable</artifactId>
-            <version>0.2.5</version>
-        </dependency>
-        
         <!-- 로깅설정 -->
         <dependency>
             <groupId>org.slf4j</groupId>
