@@ -6,7 +6,7 @@
 
     <groupId>net.chandol</groupId>
     <artifactId>logjdbc</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Logging library for SQL and resultSet</description>
