@@ -36,6 +36,7 @@ public class AsciiTable4j {
         rows = new ArrayList<>();
     }
 
+    // row를 추가한다.
     public void addRow(List<String> row) {
         for (int idx = 0, rowSize = row.size(); idx < rowSize; idx++) {
             if (row.get(idx) == null) row.set(idx, "");
@@ -44,40 +45,48 @@ public class AsciiTable4j {
         rows.add(row);
     }
 
+    // 추가된 row를 테이블형태로 변환한다.
     public String renderTable() {
-        List<Integer> lengthOfColumns = calculateLengthOfColumns();
+        // 각 column의 길이를 반환한다.
+        List<Integer> lengthOfColumns = calculateLengthOfColumns(rows);
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(rowSplitter('+', lengthOfColumns)).append("\n");
-        int rowSize = rows.size();
-        for (int idx = 0; idx < rowSize; idx++) {
-            StringBuilder row = getRowString(rows.get(idx), lengthOfColumns);
-            builder.append(row).append("\n");
+        StringBuilder tableBuilder = new StringBuilder();
+        //상단 splitter 추가
+        tableBuilder.append(rowSplitter('+', lengthOfColumns)).append("\n");
+
+        for (int idx = 0, rowSize = rows.size(); idx < rowSize; idx++) {
+            // 각 row를 문자열로 변환한다.
+            tableBuilder.append(getRowString(rows.get(idx), lengthOfColumns))
+                    .append("\n");
+
+            // 첫번째 로우아래에는 splitter를 추가한다
             if (idx == 0)
-                builder.append(rowSplitter('|', lengthOfColumns)).append("\n");
-        }
-        builder.append(rowSplitter('+', lengthOfColumns));
-
-        return builder.toString();
-    }
-
-    private String rowSplitter(Character padCharacter, List<Integer> lengthOfColumns) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(padCharacter);
-        for (int i = 0, lengthOfColumnsSize = lengthOfColumns.size(); i < lengthOfColumnsSize; i++) {
-            int lengthOfColumn = lengthOfColumns.get(i);
-            builder.append(repeatCharacter('-', lengthOfColumn + 2));
-
-            if (i < lengthOfColumnsSize - 1)
-                builder.append("+");
-            else
-                builder.append(padCharacter);
+                tableBuilder.append(rowSplitter('|', lengthOfColumns)).append("\n");
         }
 
-        return builder.toString();
+        // 제일 아래에는 row splitter를 추가한다.
+        tableBuilder.append(rowSplitter('+', lengthOfColumns));
+
+        return tableBuilder.toString();
     }
 
-    private List<Integer> calculateLengthOfColumns() {
+    // row를 문자열로 변환한다.
+    private StringBuilder getRowString(List<String> row, List<Integer> lengthOfColumns) {
+        StringBuilder builder = new StringBuilder("|");
+
+        int rowSize = row.size();
+        for (int idx = 0; idx < rowSize; idx++) {
+            int length = lengthOfColumns.get(idx);
+            String item = row.get(idx);
+            String paddedItem = " " + padRight(item, length) + " ";
+            builder.append(paddedItem).append("|");
+        }
+
+        return builder;
+    }
+
+    // 컬럼별 최대 길이를 구한다.
+    static List<Integer> calculateLengthOfColumns(List<List<String>> rows) {
         List<Integer> lengthOfColumns = new ArrayList<>();
         int columnSize = rows.get(0).size();
 
@@ -95,20 +104,24 @@ public class AsciiTable4j {
         return lengthOfColumns;
     }
 
-    public StringBuilder getRowString(List<String> row, List<Integer> lengthOfColumns) {
-        StringBuilder builder = new StringBuilder("|");
+    // row 사이를 구분하는 문자열을 생성한다.
+    static String rowSplitter(Character padCharacter, List<Integer> lengthOfColumns) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(padCharacter);
+        for (int i = 0, lengthOfColumnsSize = lengthOfColumns.size(); i < lengthOfColumnsSize; i++) {
+            int lengthOfColumn = lengthOfColumns.get(i);
+            builder.append(strFilledWithCharacter('-', lengthOfColumn + 2));
 
-        int rowSize = row.size();
-        for (int idx = 0; idx < rowSize; idx++) {
-            int length = lengthOfColumns.get(idx);
-            String item = row.get(idx);
-            String paddedItem = " " + padRight(item, length) + " ";
-            builder.append(paddedItem).append("|");
+            if (i < lengthOfColumnsSize - 1)
+                builder.append("+");
+            else
+                builder.append(padCharacter);
         }
 
-        return builder;
+        return builder.toString();
     }
 
+    // 공백을 추가한다. 한글이 있는 경우에는 보정치를 더해준다.
     static String padRight(String target, int length) {
         int lengthCorrection = target.length() - getConsoleLength(target);
 
@@ -116,19 +129,21 @@ public class AsciiTable4j {
         return String.format("%1$-" + adjustedLength + "s", target);
     }
 
-    static String repeatCharacter(Character c, int length) {
+    // 특정 문자열로 채워진 문자열을 반환한다.
+    static String strFilledWithCharacter(Character c, int length) {
         return new String(new char[length]).replace('\0', c);
     }
 
+    // 한글인 경우, 하나의 글자당 2개의 문자열 크기를 가지도록 수정한다.
     static int getConsoleLength(String str) {
-        int koreanChracterSize = 0;
+        int koreanCharacterSize = 0;
         for (int i = 0; i < str.length(); i++) {
             int codepoint = str.codePointAt(i);
             if (HANGUL == UnicodeScript.of(codepoint))
-                koreanChracterSize += 1;
+                koreanCharacterSize += 1;
         }
 
-        return str.length() + koreanChracterSize;
+        return str.length() + koreanCharacterSize;
     }
 
 }
