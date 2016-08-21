@@ -9,40 +9,35 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class AsciiTable4jTest {
-
     @Test
-    public void 아스키테이블만들기() {
+    public void renderTable() throws Exception {
         AsciiTable4j table = new AsciiTable4j();
 
-        // create table
-        table.addRow(Arrays.asList("이름", "나이", "취미", "Married"));
-        table.addRow(Arrays.asList("John", "22", "KravMaga", "No"));
-        table.addRow(Arrays.asList("Alexandra", "28", "Painting", "No"));
-        table.addRow(Arrays.asList("Quentin", "32", "Running", "Yes"));
-        table.addRow(Arrays.asList("Sebastien", "36", "VideoGames", "Yes"));
-        table.addRow(Arrays.asList("Jeanine", "60", "Sew", "Yes"));
+        table.addRow(Arrays.asList("id", "name", "hobby"));
+        table.addRow(Arrays.asList("1", "박세종", "Programming"));
+        table.addRow(Arrays.asList("2", "Gordon Park", "Swimming "));
+        table.addRow(Arrays.asList("3", "Sejong Park", "Playing Piano"));
 
-        String result = table.renderTable();
+        System.out.println(table.renderTable());
+        List<String> result = Arrays.asList(table.renderTable().split("\n"));
 
-        List<String> lineByLineResult = Arrays.asList(result.split("\n"));
-
-        System.out.println(result);
-
-        assertThat(lineByLineResult.size(), is(9));
-        assertThat(lineByLineResult.get(1), is("| 이름        | 나이 | 취미         | Married |"));
+        assertThat(result.size(), is(7));
+        assertThat(result.get(0), is("+----+-------------+---------------+"));
+        assertThat(result.get(1), is("| id | name        | hobby         |"));
+        assertThat(result.get(2), is("|----+-------------+---------------|"));
+        assertThat(result.get(3), is("| 1  | 박세종      | Programming   |"));
+        assertThat(result.get(4), is("| 2  | Gordon Park | Swimming      |"));
+        assertThat(result.get(5), is("| 3  | Sejong Park | Playing Piano |"));
+        assertThat(result.get(6), is("+----+-------------+---------------+"));
     }
 
     @Test
-    public void 한글일경우길이를2로계산(){
+    public void padRightTest() {
         //given
-        String str = "안녕하세요. Hello!!";
-
         //when
-        int consoleLength = AsciiTable4j2.getConsoleLength(str);
+        String paddedResult = ">" + AsciiTable4j.padRight("test", 10) + "<";
 
         //then
-        assertThat(str.length(), is(14));
-        assertThat(consoleLength, is(19));
+        assertThat(paddedResult, is(">test      <"));
     }
-
 }
