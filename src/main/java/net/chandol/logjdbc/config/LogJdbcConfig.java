@@ -9,9 +9,6 @@ import net.chandol.logjdbc.logging.printer.sql.formatter.SqlFormatter;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 
 import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * LogJdbc 설정
@@ -24,31 +21,28 @@ public class LogJdbcConfig {
     private ResultSetPrinter resultSetPrinter;
 
     // 로깅에 필요한 설정값을 담을 수 있다.
-    private Map<String, String> properties;
+    private LogJdbcProperties properties;
 
     public LogJdbcConfig() {
-        // TODO 기본설정 작업할 것
-        this(new HashMap<String, String>());
+        this(null, new LogJdbcProperties());
     }
 
     public LogJdbcConfig(DatabaseType type) {
-        // TODO 기본설정 작업할 것
-        this(type, new HashMap<String, String>());
+        this(type, new LogJdbcProperties());
     }
 
-    public LogJdbcConfig(Map<String, String> properties) {
+    public LogJdbcConfig(LogJdbcProperties properties) {
+        this(null, properties);
+    }
+
+    public LogJdbcConfig(DatabaseType type, LogJdbcProperties properties) {
         this.formatter = DefaultSqlFormatter.getInstance();
         this.sqlPrinter = DefaultSqlPrinter.getInstance();
         this.resultSetPrinter = ResultSetTablePrinter.getInstance();
-        this.properties = Collections.unmodifiableMap(
-                combinePropertiesMap(properties)
-        );
-    }
+        this.properties = properties;
 
-    public LogJdbcConfig(DatabaseType type, Map<String, String> properties) {
-        this(properties);
-        this.type = type;
-        this.converter = type.getParameterConverter();
+        if (type != null)
+            this.converter = type.getParameterConverter();
     }
 
     /* getter */
@@ -72,24 +66,9 @@ public class LogJdbcConfig {
         return resultSetPrinter;
     }
 
-    public boolean getBooleanProperty(String key) {
-        String value = getProperty(key);
-        if (value.equalsIgnoreCase("true"))
-            return true;
-        else if (value.equalsIgnoreCase("false"))
-            return false;
-        else
-            throw new IllegalArgumentException("cannot convert to boolean : " + value);
+    public LogJdbcProperties getProperties() {
+        return properties;
     }
-
-    public int getIntProperty(String key){
-        return Integer.valueOf(getProperty(key));
-    }
-
-    public String getProperty(String key){
-        return this.properties.get(key);
-    }
-
 
     /**
      * Datasource를 분석하여 Database를 찾고 설정합니다.
@@ -101,13 +80,5 @@ public class LogJdbcConfig {
 
         this.type = type;
         this.converter = type.getParameterConverter();
-    }
-
-
-    private static HashMap<String, String> combinePropertiesMap(Map<String, String> properties) {
-        HashMap<String, String> propertiesMap = new HashMap<>();
-        propertiesMap.putAll(LogJdbcConfigDefaultProperties.getDefaultPropertiesMap());
-        propertiesMap.putAll(properties);
-        return propertiesMap;
     }
 }

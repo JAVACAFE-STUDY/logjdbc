@@ -1,19 +1,16 @@
 package net.chandol.logjdbc.logging.printer.sql;
 
 import net.chandol.logjdbc.config.LogJdbcConfig;
+import net.chandol.logjdbc.config.LogJdbcProperties;
+import net.chandol.logjdbc.logging.LogContext;
 import net.chandol.logjdbc.logging.collector.parameter.Parameter;
 import net.chandol.logjdbc.logging.collector.parameter.ParameterCollector;
 import net.chandol.logjdbc.logging.printer.sql.paramconverter.ParameterConverter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class DefaultSqlPrinter implements SqlPrinter {
-    /* logger */
-    private static final Logger sqlLogger = LoggerFactory.getLogger("net.chandol.logjdbc.sql");
-    private static final Logger paramLogger = LoggerFactory.getLogger("net.chandol.logjdbc.parameter");
-
     /* singleton */
     private static DefaultSqlPrinter defaultSqlPrinter;
 
@@ -28,33 +25,45 @@ public class DefaultSqlPrinter implements SqlPrinter {
     }
 
     @Override
-    public void logSql(LogJdbcConfig config,
-                       String templateSql,
-                       ParameterCollector parameterCollector) {
+    public void printParameter(LogContext context) {
+        ParameterCollector collector = context.getParameterCollector();
+        ParameterConverter converter = context.getConfig().getConverter();
 
-        ParameterConverter converter = config.getConverter();
-        List<Parameter> params = parameterCollector.getAll();
+        List<Parameter> params = collector.getAll();
         List<String> convertedParams = converter.convert(params);
 
         // Parameter
-        paramLogger.debug(parameterToLog(params, convertedParams));
+        getLogger(context, "parameter").debug(
+                parameterToLog(params, convertedParams)
+        );
+    }
 
-        // SQL with formatter
-        // FIXME 이부분은 정리 및 중복제거 필요
-        String sql = SqlParameterBinder.bind(templateSql, convertedParams);
+    @Override
+    public void printSql(LogContext context) {
+        LogJdbcConfig config = context.getConfig();
+        String sql = context.getSql();
 
-        if (checkFormattable(config, sql))
+        if (context.getParameterCollector() != null) {
+            ParameterCollector collector = context.getParameterCollector();
+            ParameterConverter converter = config.getConverter();
+
+            List<Parameter> params = collector.getAll();
+            List<String> convertedParams = converter.convert(params);
+
+            sql = SqlParameterBinder.bind(sql, convertedParams);
+        }
+
+        // FIXME 아래 부분은 필터 형태로 변경하자.
+        if (checkFormattable(config.getProperties(), sql))
             sql = config.getFormatter().format(sql);
         else
             sql = "\n" + sql;
 
-
-        // FIXME 아래 부분은 필터 형태로 변경하자.
-        if(config.getBooleanProperty("sql.trim.extra-linebreaks")){
+        if (config.getProperties().getSqlTrimExtraLinebreak()) {
             sql = removeExtraLineBreak(sql);
         }
 
-        sqlLogger.debug(sql);
+        getLogger(context, "sql").debug(sql);
     }
 
     String removeExtraLineBreak(String sql) {
@@ -62,22 +71,10 @@ public class DefaultSqlPrinter implements SqlPrinter {
         return sql;
     }
 
-    @Override
-    public void logSql(LogJdbcConfig config, String sql) {
-        //SQL Formatting
-        // FIXME 이부분은 정리 및 중복제거 필요
-        if (checkFormattable(config, sql))
-            sql = config.getFormatter().format(sql);
-        else
-            sql = "\n" + sql;
-
-        sqlLogger.debug(sql);
-    }
-
     // FIXME 파라미터가 모호함... 리팩토링 필요!!
     static String parameterToLog(List<Parameter> params, List<String> convertedParams) {
         StringBuilder builder = new StringBuilder();
-        builder.append("\nparameters : [");
+        builder.append("\n    parameters : [");
         for (int idx = 0; idx < params.size(); idx++) {
             String type = params.get(idx).getType().getTypeAsStr();
             String value = convertedParams.get(idx);
@@ -103,14 +100,18 @@ public class DefaultSqlPrinter implements SqlPrinter {
     }
 
     // FIXME Properties 설정은 고민 필요!
-    private static boolean checkFormattable(LogJdbcConfig config, String sql) {
-        boolean isFormatActive = config.getBooleanProperty("sql.auto.format.active");
-        boolean isIgnoreFormattedSql = config.getBooleanProperty("sql.auto.format.ignore-formatted");
+    private static boolean checkFormattable(LogJdbcProperties prop, String sql) {
+        boolean isFormatActive = prop.getSqlAutoFormatActive();
+        boolean isIgnoreFormattedSql = prop.getSqlAutoFormatSkipFormattedSql();
 
         if (isFormatActive)
             return not(isIgnoreFormattedSql && isFormattedSql(sql));
         else
             return false;
+    }
+
+    private static Logger getLogger(LogContext context, String parameter) {
+        return context.getHelper().getLogger(parameter);
     }
 
     private static boolean isFormattedSql(String sql) {

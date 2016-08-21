@@ -2,9 +2,6 @@ package net.chandol.logjdbc.config;
 
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -18,26 +15,23 @@ public class LogJdbcConfigTest {
         LogJdbcConfig config = new LogJdbcConfig();
 
         //then
-        assertThat(config.getBooleanProperty("sql.trim.extra-linebreaks"), is(true));
-        assertThat(config.getBooleanProperty("sql.auto.format.active"), is(true));
-        assertThat(config.getBooleanProperty("sql.auto.format.ignore-formatted"), is(true));
-        assertThat(config.getIntProperty("resultset.maxlength"), is(10));
+        LogJdbcProperties prop = config.getProperties();
+        assertThat(prop.getSqlTrimExtraLinebreak(), is(true));
+        assertThat(prop.getSqlAutoFormatActive(), is(true));
+        assertThat(prop.getSqlAutoFormatSkipFormattedSql(), is(true));
+        assertThat(prop.getResultsetMaxlength(), is(10));
     }
 
     @Test
     public void 기본_property_Override() throws Exception {
         //given
-        Map<String, String> properties = new HashMap<String, String>() {{
-            put("sql.auto.format.active", "false");
-        }};
+        LogJdbcProperties prop = new LogJdbcProperties();
 
         //when
-        LogJdbcConfig config = new LogJdbcConfig(properties);
+        prop.setResultsetMaxlength(10);
 
         //then
-        assertThat(config.getBooleanProperty("sql.auto.format.active"), is(false));
-        assertThat(config.getBooleanProperty("sql.trim.extra-linebreaks"), is(true));
-
-
+        assertThat(prop.getSqlAutoFormatActive(), is(true));
+        assertThat(prop.getResultsetMaxlength(), is(10));
     }
 }
