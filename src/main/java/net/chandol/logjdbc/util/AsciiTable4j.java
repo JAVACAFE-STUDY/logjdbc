@@ -6,6 +6,29 @@ import java.util.List;
 
 import static java.lang.Character.UnicodeScript.HANGUL;
 
+/**
+ * Create asciiTable for java
+ *
+ * <pre>
+ * AsciiTable4j table = new AsciiTable4j();
+ *
+ * table.addRow(Arrays.asList("id", "name", "hobby"));
+ * table.addRow(Arrays.asList("1", "박세종", "Programming"));
+ * table.addRow(Arrays.asList("2", "Gordon Park", "Swimming "));
+ * table.addRow(Arrays.asList("3", "Sejong Park", "Playing Piano"));
+ *
+ * System.out.println(table.renderTable());
+ *
+ * // result
+ * +----+-------------+---------------+
+ * | id | name        | hobby         |
+ * |----+-------------+---------------|
+ * | 1  | 박세종      | Programming   |
+ * | 2  | Gordon Park | Swimming      |
+ * | 3  | Sejong Park | Playing Piano |
+ * +----+-------------+---------------+
+ * </pre>
+ */
 public class AsciiTable4j {
     private List<List<String>> rows;
 
