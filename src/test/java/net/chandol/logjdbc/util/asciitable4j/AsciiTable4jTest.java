@@ -1,6 +1,5 @@
-package net.chandol.logjdbc.util;
+package net.chandol.logjdbc.util.asciitable4j;
 
-import net.chandol.logjdbc.util.asciitable4j.AsciiTable4j;
 import org.junit.Test;
 
 import java.util.Arrays;
