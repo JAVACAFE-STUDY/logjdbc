@@ -3,7 +3,7 @@ package net.chandol.logjdbc.logging.printer.resultset;
 import net.chandol.logjdbc.config.LogJdbcConfig;
 import net.chandol.logjdbc.logging.LogContext;
 import net.chandol.logjdbc.logging.collector.resultset.ResultSetData;
-import net.chandol.logjdbc.util.AsciiTable4j;
+import net.chandol.logjdbc.util.asciitable4j.AsciiTable4j;
 
 import java.util.Arrays;
 import java.util.List;

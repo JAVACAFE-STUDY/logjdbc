@@ -19,7 +19,14 @@ public class ProxyConnection implements Connection {
 
     @Override
     public Statement createStatement() throws SQLException {
-        return new ProxyStatement(LogContext.of(config), _connection.createStatement());
+        LogContext context = LogContext.of(config);
+        try {
+            return new ProxyStatement(context, _connection.createStatement());
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
+
     }
 
     @Override
@@ -36,7 +43,14 @@ public class ProxyConnection implements Connection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new ProxyStatement(LogContext.of(config), _connection.createStatement(resultSetType, resultSetConcurrency));
+        LogContext context = LogContext.of(config);
+        try {
+            return new ProxyStatement(context, _connection.createStatement(resultSetType, resultSetConcurrency));
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
+
     }
 
     @Override
@@ -53,12 +67,26 @@ public class ProxyConnection implements Connection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new ProxyStatement(LogContext.of(config), _connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
+        LogContext context = LogContext.of(config);
+        try {
+            return new ProxyStatement(context, _connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
+
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return new ProxyPreparedStatement(LogContext.of(config, sql), _connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        LogContext context = LogContext.of(config, sql);
+        try {
+            return new ProxyPreparedStatement(context, _connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability));
+        } catch (SQLException e) {
+            context.printLog();
+            throw e;
+        }
+
     }
 
     @Override
