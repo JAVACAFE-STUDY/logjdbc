@@ -98,7 +98,7 @@ public class DefaultSqlPrinter implements SqlPrinter {
             StringBuilder builder = new StringBuilder();
             for (int idx = 0; idx < splitedTemplateSql.length; idx++) {
                 builder.append(splitedTemplateSql[idx]);
-                if (paramsSize < idx) {
+                if (idx < paramsSize) {
                     builder.append(params.get(idx));
                 }
             }
