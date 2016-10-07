@@ -25,7 +25,9 @@ Database는 데이터가 최종적으로 저장되는 장소이며 프로그램�
 
 == 사용법
 
-`LogJdbcDataSource` 로 기존 `DataSource` 객체를 추가하여 로깅을 설정할 수 있습니다.
+`LogJdbcDataSource` 로 기존에 사용하던 `DataSource`를 감싸서 선언합니다.
+
+아래는 스프링환경에서 LogJdbc를 사용하는 방법입니다.
 
 [source, java]
 ----
@@ -42,4 +44,16 @@ public DataSource simpleDataSource() {
 
     return dataSource;
 }
+----
+
+SQL이 출력될 수 있도록 로그설정이 필요합니다. `net.chandol`로 로깅레벨을 설정을 추가해주셔야 합니다.
+
+
+[source, xml]
+----
+<!-- log4j일 경우에 아래와 같이 추가 -->
+<logger name="net.chandol">
+    <level value="INFO"/>
+    <appender-ref ref="console"/>
+</logger>
 ----
