@@ -90,12 +90,20 @@ public class DefaultSqlPrinter implements SqlPrinter {
     }
 
     private static class SqlParameterBinder {
-        static String bind(String templateSql, List<String> params) {
-            // TODO 성능 개선필요
-            for (String param : params)
-                templateSql = templateSql.replaceFirst("\\?", param);
 
-            return templateSql;
+        static String bind(String templateSql, List<String> params) {
+            String[] splitedTemplateSql = templateSql.split("\\?");
+
+            int paramsSize = params.size();
+            StringBuilder builder = new StringBuilder();
+            for (int idx = 0; idx < splitedTemplateSql.length; idx++) {
+                builder.append(splitedTemplateSql[idx]);
+                if (idx < paramsSize) {
+                    builder.append(params.get(idx));
+                }
+            }
+
+            return builder.toString();
         }
     }
 

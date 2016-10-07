@@ -1,4 +1,4 @@
-package net.chandol.logjdbc.util;
+package net.chandol.logjdbc.util.asciitable4j;
 
 import org.junit.Test;
 
