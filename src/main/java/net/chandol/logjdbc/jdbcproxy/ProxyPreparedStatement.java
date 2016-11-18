@@ -243,7 +243,11 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
     public void setObject(int index, Object x, int targetSqlType) throws SQLException {
         try {
             _pstmt.setObject(index, x, targetSqlType);
-            paramCollector.add(index, _Object, "<Object>");
+
+            if (isCharArr(x))
+                paramCollector.add(index, _Object, "<Object>");
+            else
+                paramCollector.add(index, _String, x.toString());
         } catch (SQLException e) {
             context.printLog();
             throw e;
@@ -254,7 +258,11 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
     public void setObject(int index, Object x) throws SQLException {
         try {
             _pstmt.setObject(index, x);
-            paramCollector.add(index, _Object, "<Object>");
+
+            if (isCharArr(x))
+                paramCollector.add(index, _Object, "<Object>");
+            else
+                paramCollector.add(index, _String, x.toString());
         } catch (SQLException e) {
             context.printLog();
             throw e;
@@ -598,6 +606,11 @@ public class ProxyPreparedStatement extends ProxyStatement implements PreparedSt
     @Override
     public void addBatch() throws SQLException {
         _pstmt.addBatch();
+    }
+
+
+    private static boolean isCharArr(Object x) {
+        return x.getClass().isAssignableFrom(char[].class);
     }
 
 }

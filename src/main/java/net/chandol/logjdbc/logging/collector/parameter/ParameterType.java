@@ -24,12 +24,16 @@ public enum ParameterType {
     }
 
     public boolean match(ParameterType... types) {
-        for (ParameterType type : types)
-            if (this == type) return true;
+        for (ParameterType type : types){
+            if (this == type) {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    public String getTypeAsStr(){
+    public String getTypeAsStr() {
         return this.name().substring(1);
     }
 }

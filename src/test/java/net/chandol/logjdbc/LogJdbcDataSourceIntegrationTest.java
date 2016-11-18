@@ -28,18 +28,19 @@ public class LogJdbcDataSourceIntegrationTest extends LogReadableTestBase {
         // create statement
         Statement statement = connection.createStatement();
         statement.execute("CREATE TABLE CUSTOMERS (ID INT NOT NULL, NAME VARCHAR (20) NOT NULL, AGE INT NOT NULL, ADDRESS CHAR (25), SALARY DECIMAL(18, 2), PRIMARY KEY (ID));");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (2, 'Khilan', 25, 'Delhi', 1500.00 );");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (3, 'kaushik', 23, 'Kota', 2000.00 );");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (4, 'Chaitali', 25, 'Mumbai', 6500.00 );");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (5, 'Hardik', 27, 'Bhopal', 8500.00 );");
-        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (6, 'Komal', 22, 'MP', 4500.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (2, '김동표', 25, '서울', 1500.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (3, '송준호', 23, '부산', 2000.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (4, '문종현', 25, '대전', 6500.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (5, '심인보', 27, '대구', 8500.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (6, '박세종', 22, '울산', 4500.00 );");
+        statement.execute("INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY) VALUES (7, 'Tester', 21, 'Texas', 1500.00 );");
 
         // create preparedStatement
-        PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE ID=?");
-        pstmt.setLong(1, 3);
-        ResultSet resultSet = pstmt.executeQuery();
+        PreparedStatement pstmt1 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE ID=?");
+        pstmt1.setLong(1, 3);
+        ResultSet resultSet1 = pstmt1.executeQuery();
 
-        while (resultSet.next()) {
+        while (resultSet1.next()) {
         }
 
         PreparedStatement pstmt2 = connection.prepareStatement("SELECT * FROM CUSTOMERS");
@@ -48,16 +49,25 @@ public class LogJdbcDataSourceIntegrationTest extends LogReadableTestBase {
         while (resultSet2.next()) {
         }
 
-        PreparedStatement pstmt3 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE  NAME=?");
-        pstmt3.setString(1, "Hardik");
+        PreparedStatement pstmt3 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE NAME=?");
+        pstmt3.setString(1, "문종현");
         ResultSet resultSet3 = pstmt3.executeQuery();
 
         while (resultSet3.next()) {
         }
 
-        resultSet.close();
+
+        PreparedStatement pstmt4 = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE NAME=?");
+        pstmt4.setObject(1, "Tester");
+        ResultSet resultSet4 = pstmt4.executeQuery();
+
+        while (resultSet4.next()) {
+        }
+
+        resultSet1.close();
         resultSet2.close();
         resultSet3.close();
+        resultSet4.close();
 
         connection.rollback();
         connection.close();
