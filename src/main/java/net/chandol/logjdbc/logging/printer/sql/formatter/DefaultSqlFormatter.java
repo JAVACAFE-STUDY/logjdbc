@@ -71,7 +71,7 @@ public class DefaultSqlFormatter implements SqlFormatter {
     }
 
     private static final String INDENT_STRING = "    ";
-    private static final String INITIAL = "\n    ";
+    private static final String INITIAL = "\n" + INDENT_STRING;
 
     private DefaultSqlFormatter() {}
 

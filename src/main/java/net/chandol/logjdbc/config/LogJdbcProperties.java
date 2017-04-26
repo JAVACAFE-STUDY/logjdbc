@@ -20,7 +20,7 @@ public class LogJdbcProperties {
         setSqlAutoFormatActive(true);
         setSqlAutoFormatSkipFormattedSql(true);
         setResultsetMaxlength(10);
-        setLoggerBasePath("net.chandol");
+        setLoggerBasePath("net.chandol.logjdbc");
     }
 
     public void setSqlTrimExtraLinebreak(boolean value) {setProperty(SQL_TRIM_EXTRA_LINEBREAK, value);}
