@@ -11,8 +11,8 @@ final public class PrintLogHelper {
         this.config = config;
     }
 
-    public Logger getLogger(String subfix){
+    public Logger getLogger(String suffix){
         String basePath = config.getProperties().getLoggerBasePath();
-        return LoggerFactory.getLogger(basePath + "." + subfix);
+        return LoggerFactory.getLogger(basePath + "." + suffix);
     }
 }

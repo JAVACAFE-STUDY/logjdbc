@@ -24,6 +24,6 @@ public class ParameterCollectorTest {
         List<Parameter> result = paramCollector.getAll();
 
         assertThat(result.size(), is(3));
-        assertThat(result.get(0), is(Parameter.of(_String, "TEST")));
+        assertThat(result.get(0), is(Parameter.of(0, _String, "TEST")));
     }
 }

@@ -1,10 +1,12 @@
 package net.chandol.logjdbc.logging.collector.parameter;
 
-public class Parameter {
+public class Parameter implements Comparable<Parameter>{
+    private int index;
     private Object value;
     private ParameterType type;
 
-    private Parameter(ParameterType type, Object value) {
+    private Parameter(int index, ParameterType type, Object value) {
+        this.index = index;
         this.value = value;
         this.type = type;
     }
@@ -17,8 +19,12 @@ public class Parameter {
         return type;
     }
 
-    public static Parameter of(ParameterType type, Object value){
-        return new Parameter(type, value);
+    public int getIndex() {
+        return index;
+    }
+
+    public static Parameter of(int index, ParameterType type, Object value){
+        return new Parameter(index, type, value);
     }
 
     @Override
@@ -38,5 +44,10 @@ public class Parameter {
         int result = value != null ? value.hashCode() : 0;
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Parameter b) {
+        return Integer.compare(this.getIndex(), b.getIndex());
     }
 }

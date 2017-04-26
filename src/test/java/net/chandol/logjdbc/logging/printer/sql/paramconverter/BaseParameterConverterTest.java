@@ -14,7 +14,7 @@ public class BaseParameterConverterTest {
         ParameterConverter converter = new BaseParameterConverter();
 
         //when
-        String testParam = converter.convert(Parameter.of(ParameterType._String, "테스트"));
+        String testParam = converter.convert(Parameter.of(0, ParameterType._String, "테스트"));
 
         //then
         assertThat(testParam, is("'테스트'"));

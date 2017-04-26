@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>[1.7.0,)</version>
+            <version>1.7.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -93,6 +93,19 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>test-slf4j-scope</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                    <version>1.7.24</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
